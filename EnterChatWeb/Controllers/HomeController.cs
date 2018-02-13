@@ -33,5 +33,24 @@ namespace EnterChatWeb.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        //мои контроллеры\
+        [HttpGet]
+        public ViewResult RegisterCompany()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ViewResult RegisterCompany(Company company)
+        {
+            if (ModelState.IsValid)
+            {
+                return View("About");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }

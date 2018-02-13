@@ -1,0 +1,46 @@
+﻿@model EnterChatWeb.Models.Company
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Зарегистрировать компанию</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+    <form asp-action="RegisterCompany" method="post">
+        <div asp-validation-summary="All"></div>
+        <p>
+            <label asp-for="Title">Название компании: </label>
+            <input asp-for="Title" />
+        </p>
+        <p>
+            <label asp-for="WorkEmail">Корпоративная почта: </label>
+            <input asp-for="WorkEmail" />
+        </p>
+        <p>
+            <label asp-for="AdminName">Имя администратора: </label>
+            <input asp-for="AdminName" />
+        </p>
+        <p>
+            <label asp-for="AdminSecondName">Фамилия администратора: </label>
+            <input asp-for="AdminSecondName" />
+        </p>
+        <p>
+            <label asp-for="AdminEmail">Почтовый адрес администратора: </label>
+            <input asp-for="AdminEmail" />
+        </p>
+        <p>
+            <label asp-for="AdminLogin">Логин администратора: </label>
+            <input asp-for="AdminLogin" />
+        </p>
+        <p>
+            <label asp-for="AdminPassword">Пароль администратора: </label>
+            <input asp-for="AdminPassword" />
+        </p>
+        <button type="submit">Зарегистрировать</button>
+    </form>
+</body>
+</html>
