@@ -19,6 +19,7 @@ namespace EnterChatWeb.Models
         public ICollection<Topic> Topics { get; set; }
         public ICollection<Note> Notes { get; set; }
         public ICollection<File> Files { get; set; }
+        public ICollection<Worker> Workers { get; set; }
         public ICollection<GroupChatMessage> GroupChatMessages { get; set; }
     }
 }

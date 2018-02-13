@@ -9,10 +9,7 @@ namespace EnterChatWeb.Models
     public class User
     {
         public int ID { get; set; }
-        public int CompanyID { get; set; }
-        public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public bool? Status { get; set; }
+        public int WorkerID { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime RegistrationDate { get; set; }
@@ -22,5 +19,6 @@ namespace EnterChatWeb.Models
         public string Password { get; set; }
 
         public Company Company { get; set; }
+        public Worker Worker { get; set; }
     }
 }

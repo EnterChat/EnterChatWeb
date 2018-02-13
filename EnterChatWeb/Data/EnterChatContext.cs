@@ -21,6 +21,7 @@ namespace EnterChatWeb.Data
         public DbSet<GroupChatMessage> GroupChatMessages { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Worker> Workers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +38,7 @@ namespace EnterChatWeb.Data
             modelBuilder.Entity<GroupChatMessage>().ToTable("GroupChatMessage");
             modelBuilder.Entity<File>().ToTable("File");
             modelBuilder.Entity<Company>().ToTable("Company");
+            modelBuilder.Entity<Worker>().ToTable("Worker");
         }
     }
 }
