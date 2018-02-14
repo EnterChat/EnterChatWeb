@@ -21,22 +21,6 @@ namespace EnterChatWeb.Models
         [EmailAddress]
         public string WorkEmail { get; set; }
 
-        [Required(ErrorMessage = "Пожалуйста, придумайте логин!")]
-        public string AdminLogin { get; set; }
-
-        [Required(ErrorMessage = "Пожалуйста, введите адрес вашей почты!")]
-        [EmailAddress]
-        public string AdminEmail { get; set; }
-
-        [Required(ErrorMessage = "Пожалуйста, придумайте пароль!")]
-        public string AdminPassword { get; set; }
-
-        [Required(ErrorMessage = "Пожалуйста, введите своё имя!")]
-        public string AdminName { get; set; }
-
-        [Required(ErrorMessage = "Пожалуйста, введите свою фамилию!")]
-        public string AdminSecondName { get; set; }
-
         public ICollection<User> Users { get; set; }
         public ICollection<Topic> Topics { get; set; }
         public ICollection<Note> Notes { get; set; }
