@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using EnterChatWeb.Data;
 using EnterChatWeb.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +26,21 @@ namespace EnterChatWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<EnterChatContext>(options => 
+            services.AddDbContext<EnterChatContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/RegisterCompany");
+                });
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("OnlyForAdmin", policy => {
+                    policy.RequireClaim("Status");
+                });
+
+            });
             services.AddMvc();
         }
 
@@ -43,6 +58,7 @@ namespace EnterChatWeb
             }
 
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

@@ -1,7 +1,6 @@
-﻿@{
-    ViewData["Title"] = "About";
-}
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+﻿@using System.Security.Claims
 
-<p>Use this area to provide additional information.</p>
+<h1> @User.FindFirst(x => x.Type == "FirstName").Value</h1>
+<h2> @User.FindFirst(x => x.Type == "SecondName").Value</h2>
+
+<p>Здесь будет какая-либо информация</p>

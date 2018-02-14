@@ -10,15 +10,12 @@ namespace EnterChatWeb.Models
     {
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Пожалуйста, введите название компании!")]
         public string Title { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreationDate { get; set; }
 
-        [Required(ErrorMessage = "Пожалуйста, введите адрес корпоративной почты!")]
-        [EmailAddress]
         public string WorkEmail { get; set; }
 
         public ICollection<User> Users { get; set; }

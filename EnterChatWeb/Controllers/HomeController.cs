@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EnterChatWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EnterChatWeb.Controllers
 {
@@ -17,11 +18,8 @@ namespace EnterChatWeb.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
-
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -36,7 +34,7 @@ namespace EnterChatWeb.Controllers
 
         //мои контроллеры
 
-        public ActionResult GetUserReg()
+        /*public ActionResult GetUserReg()
         {
             return PartialView("_UserReg");
         }
@@ -44,24 +42,12 @@ namespace EnterChatWeb.Controllers
         public ActionResult GetWorkerReg()
         {
             return PartialView("_WorkerReg");
-        }
+        }*/
 
         [HttpGet]
         public ViewResult RegisterCompany()
         {
             return View();
-        }
-        [HttpPost]
-        public ViewResult RegisterCompany(Company company, User user, Worker worker)
-        {
-            if (ModelState.IsValid)
-            {
-                return View("About");
-            }
-            else
-            {
-                return View();
-            }
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EnterChatWeb</title>
+    <title>@User.FindFirst(x => x.Type == "Company").Value</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -26,17 +27,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">EnterChatWeb</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@User.FindFirst(x => x.Type == "Company").Value</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">О компании</a></li>
-                    <li><a asp-area="" asp-controller="Workers" asp-action="Index">Сотрудники</a></li>
-                    <li><a asp-area="" asp-controller="Files" asp-action="Index">Файлы</a></li>
-                    <li><a asp-area="" asp-controller="GroupChat" asp-action="Index">Групповой чат</a></li>
-                    <li><a asp-area="" asp-controller="Notes" asp-action="Index">Заметки</a></li>
-                    <li><a asp-area="" asp-controller="Topics" asp-action="Index">Обсуждения</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Workers">Сотрудники</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Files">Файлы</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="GroupChat">Групповой чат</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Notes">Заметки</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Topics">Обсуждения</a></li>
                 </ul>
             </div>
         </div>
