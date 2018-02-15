@@ -37,7 +37,7 @@ namespace EnterChatWeb
             services.AddAuthorization(opts =>
             {
                 opts.AddPolicy("OnlyForAdmin", policy => {
-                    policy.RequireClaim("Status");
+                    policy.RequireClaim("Status", "True");
                 });
 
             });

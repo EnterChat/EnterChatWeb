@@ -87,7 +87,8 @@ namespace EnterChatWeb.Controllers
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
                 new Claim("FirstName", user.Worker.FirstName),
                 new Claim("SecondName", user.Worker.SecondName),
-                new Claim("Company", user.Company.Title)
+                new Claim("Company", user.Company.Title),
+                new Claim("Status", user.Worker.Status.ToString())
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,

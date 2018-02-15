@@ -1,6 +1,5 @@
 ﻿@using System.Security.Claims
 
-<h1> @User.FindFirst(x => x.Type == "FirstName").Value</h1>
-<h2> @User.FindFirst(x => x.Type == "SecondName").Value</h2>
+<h1> Компания @User.FindFirst(x => x.Type == "Company").Value</h1>
 
-<p>Здесь будет какая-либо информация</p>
+<p>Здесь можно будет посмотреть информацию о компании</p>

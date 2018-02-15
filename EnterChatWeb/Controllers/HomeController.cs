@@ -20,10 +20,39 @@ namespace EnterChatWeb.Controllers
         {
             return View();
         }
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
 
+        [Authorize(Policy = "OnlyForAdmin")]
+        public IActionResult AdminPanel() {
+            return View();
+        }
+
+        public IActionResult AccountPanel()
+        {
+            return View();
+        }
+
+        public IActionResult Files()
+        {
+            return View();
+        }
+
+        public IActionResult GroupChat()
+        {
+            return View();
+        }
+
+        public IActionResult Notes()
+        {
+            return View();
+        }
+
+        public IActionResult Topics()
+        {
+            return View();
+        }
+
+        public IActionResult Workers()
+        {
             return View();
         }
 
@@ -44,10 +73,9 @@ namespace EnterChatWeb.Controllers
             return PartialView("_WorkerReg");
         }*/
 
-        [HttpGet]
-        public ViewResult RegisterCompany()
+        public IActionResult RegisterCompany()
         {
-            return View();
+            return RedirectToAction("RegisterCompany", "Account");
         }
     }
 }
