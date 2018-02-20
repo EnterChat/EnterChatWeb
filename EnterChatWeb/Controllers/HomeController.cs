@@ -22,35 +22,36 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize(Policy = "OnlyForAdmin")]
+        [Authorize]
         public IActionResult AdminPanel() {
             return View();
         }
-
+        [Authorize]
         public IActionResult AccountPanel()
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult Files()
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult GroupChat()
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult Notes()
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult Topics()
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult Workers()
         {
             return View();
@@ -61,17 +62,10 @@ namespace EnterChatWeb.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        //мои контроллеры
-
-        /*public ActionResult GetUserReg()
+        public IActionResult Login()
         {
-            return PartialView("_UserReg");
+            return RedirectToAction("Login", "Account");
         }
-
-        public ActionResult GetWorkerReg()
-        {
-            return PartialView("_WorkerReg");
-        }*/
 
         public IActionResult RegisterCompany()
         {

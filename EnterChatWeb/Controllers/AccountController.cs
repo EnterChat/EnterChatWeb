@@ -29,6 +29,41 @@ namespace EnterChatWeb.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login &&
+                u.Password == model.Password);
+                if (user != null)
+                {
+                    Worker worker = await _context.Workers.FirstOrDefaultAsync(u => u.ID == user.WorkerID);
+                    Company company = await _context.Companies.FirstOrDefaultAsync(u => u.ID == user.CompanyID);
+                    user.Worker = worker;
+                    user.Company = company;
+                    await Authenticate(user);
+                    return RedirectToAction("About", "Home");
+                }
+                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterCompany(RegModel model)
