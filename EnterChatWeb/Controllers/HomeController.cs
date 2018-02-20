@@ -15,14 +15,13 @@ namespace EnterChatWeb.Controllers
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult About()
         {
             return View();
         }
 
         [Authorize(Policy = "OnlyForAdmin")]
-        [Authorize]
         public IActionResult AdminPanel() {
             return View();
         }
@@ -70,6 +69,11 @@ namespace EnterChatWeb.Controllers
         public IActionResult RegisterCompany()
         {
             return RedirectToAction("RegisterCompany", "Account");
+        }
+
+        public IActionResult RegisterWorker()
+        {
+            return RedirectToAction("RegisterWorker", "Account");
         }
     }
 }

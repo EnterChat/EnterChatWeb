@@ -36,6 +36,55 @@ namespace EnterChatWeb.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult RegisterWorker()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterWorker(WorkerRegModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Worker worker = await _context.Workers.FirstOrDefaultAsync(w => w.InviteCode == model.InviteCode);
+                if (worker != null)
+                {
+                    User user = await _context.Users.FirstOrDefaultAsync(u => u.ID == worker.ID);
+                    if (user == null)
+                    {
+                        Company company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == worker.CompanyID);
+                        user = new User
+                        {
+                            Login = model.Login,
+                            Password = model.Password,
+                            Email = model.Email,
+                            Worker = worker,
+                            Company = company
+                        };
+                        _context.Users.Add(user);
+
+                        await _context.SaveChangesAsync();
+
+                        await Authenticate(user);
+
+                        return RedirectToAction("About", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Такой код уже использован");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Такого кода не существует");
+                }
+                
+            }
+            return View(model);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
