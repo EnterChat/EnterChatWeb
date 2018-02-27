@@ -100,7 +100,7 @@ namespace EnterChatWeb.Controllers
                     user.Worker = worker;
                     user.Company = company;
                     await Authenticate(user);
-                    return RedirectToAction("About", "Home");
+                    return RedirectToAction("About", "Data");
                 }
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
@@ -153,7 +153,7 @@ namespace EnterChatWeb.Controllers
 
                     await Authenticate(user);
 
-                    return RedirectToAction("About", "Home");
+                    return RedirectToAction("About", "Data");
                 }
                 else
                 {
@@ -169,9 +169,11 @@ namespace EnterChatWeb.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
                 new Claim("FirstName", user.Worker.FirstName),
                 new Claim("SecondName", user.Worker.SecondName),
                 new Claim("Company", user.Company.Title),
+                new Claim("CompanyID", user.CompanyID.ToString()),
                 new Claim("Status", user.Worker.Status.ToString())
             };
             // создаем объект ClaimsIdentity

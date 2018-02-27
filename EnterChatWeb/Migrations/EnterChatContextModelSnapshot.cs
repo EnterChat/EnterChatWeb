@@ -193,7 +193,7 @@ namespace EnterChatWeb.Migrations
 
                     b.Property<string>("SecondName");
 
-                    b.Property<bool?>("Status");
+                    b.Property<bool>("Status");
 
                     b.HasKey("ID");
 
