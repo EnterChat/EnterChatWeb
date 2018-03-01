@@ -1,0 +1,34 @@
+﻿@model EnterChatWeb.Models.WorkerRegModel
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Зарегистрироваться как сотрудник</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+    <form asp-action="RegisterWorker" asp-controller="Account" method="post">
+        <div asp-validation-summary="All"></div>
+        <p>
+            <label asp-for="Login">Логин: </label>
+            <input asp-for="Login" />
+        </p>
+        <p>
+            <label asp-for="Email">Почта: </label>
+            <input asp-for="Email" />
+        </p>
+        <p>
+            <label asp-for="Password">Пароль: </label>
+            <input asp-for="Password" />
+        </p>
+        <p>
+            <label asp-for="InviteCode">Инвайт-код: </label>
+            <input asp-for="InviteCode" type="text"/>
+        </p>
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+</body>
+</html>

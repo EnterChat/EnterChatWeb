@@ -1,0 +1,29 @@
+﻿@model EnterChatWeb.Models.LoginModel
+
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Войти в аккаунт</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+    <form method="post" asp-controller="Account" asp-action="Login">
+        <div asp-validation-summary="All"></div>
+
+        <div>
+            <label asp-for="Login">Логин: </label>
+            <input asp-for="Login" />
+        </div>
+
+        <div>
+            <label asp-for="Password">Пароль: </label>
+            <input asp-for="Password" />
+        </div>
+        <input type="submit" value="Login" />
+    </form>
+</body>
+</html>

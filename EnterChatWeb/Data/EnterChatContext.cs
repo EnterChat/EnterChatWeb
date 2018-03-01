@@ -26,11 +26,6 @@ namespace EnterChatWeb.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            {
-                relationship.DeleteBehavior = DeleteBehavior.Restrict;
-            }
-
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<TopicMessage>().ToTable("TopicMessage");
             modelBuilder.Entity<Topic>().ToTable("Topic");
@@ -39,6 +34,9 @@ namespace EnterChatWeb.Data
             modelBuilder.Entity<File>().ToTable("File");
             modelBuilder.Entity<Company>().ToTable("Company");
             modelBuilder.Entity<Worker>().ToTable("Worker");
+
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
