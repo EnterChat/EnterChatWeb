@@ -22,11 +22,11 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
-        public IActionResult About()
+        public async Task<IActionResult> About()
         {
-            string user_id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
-            return View();
+            var company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == comp_id);
+            return View(company);
         }
 
         [Authorize(Policy = "OnlyForAdmin")]
@@ -35,10 +35,11 @@ namespace EnterChatWeb.Controllers
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
             var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
             var company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == comp_id);
-            AdminPanelModel model = new AdminPanelModel();
+            /*AdminPanelModel model = new AdminPanelModel();
             model.Company = company;
-            model.Workers = workers;
-            return View(model);
+            model.Workers = workers;*/
+            company.Workers = workers;
+            return View(company);
         }
 
         [Authorize]

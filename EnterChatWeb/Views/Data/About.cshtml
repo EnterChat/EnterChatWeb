@@ -1,9 +1,9 @@
-﻿@using System.Security.Claims
+﻿@model EnterChatWeb.Models.Company
 
 <head>
     <title>О компании</title>
 </head>
-
-<h1> Компания @User.FindFirst(x => x.Type == "Company").Value</h1>
-
-<p>Здесь можно будет посмотреть информацию о компании</p>
+<h2>Информация о компании</h2>
+<p>Название: @Model.Title</p>
+<p>Адрес корпоративной почты: @Model.WorkEmail</p>
+<p>Дата регистрации: @Model.CreationDate</p>

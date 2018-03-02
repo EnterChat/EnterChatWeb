@@ -1,17 +1,17 @@
-﻿@model EnterChatWeb.Models.AdminPanelModel
+﻿@model EnterChatWeb.Models.Company
 @using System.Security.Claims
 
 <head>
     <title>Панель администратора</title>
 </head>
 
-<h1>Панель управления компанией @Model.Company.Title</h1>
+<h1>Панель управления компанией @Model.Title</h1>
 <h2>Информация</h2>
-<p>Название компании: @Model.Company.Title</p>
-<p>Адрес корпоративной почты: @Model.Company.WorkEmail</p>
-<p>Дата регистрации: @Model.Company.CreationDate</p>
+<p>Название компании: @Model.Title</p>
+<p>Адрес корпоративной почты: @Model.WorkEmail</p>
+<p>Дата регистрации: @Model.CreationDate</p>
 
-<a asp-action="EditCompany" asp-controller="Data" asp-route-id="@Model.Company.ID">Изменить данные компании</a>
+<a asp-action="EditCompany" asp-controller="Data" asp-route-id="@Model.ID">Изменить данные компании</a>
 
 <h2>Список работников</h2>
 <a asp-action="AddWorker">Добавить сотрудника</a>
