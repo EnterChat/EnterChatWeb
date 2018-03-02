@@ -42,9 +42,44 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
-        public IActionResult AccountPanel()
+        public async Task<IActionResult> AccountPanel()
         {
-            return View();
+            int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.ID == user_id);
+            return View(user);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> EditUser(int? id)
+        {
+            if (id != null)
+            {
+                User user = await _context.Users.FirstOrDefaultAsync(u => u.ID == id);
+                if (user != null)
+                {
+                    return View(user);
+                }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditUser(User user)
+        {
+            User user_db = await _context.Users.FirstOrDefaultAsync(u => u.ID == user.ID);
+            if (user_db != null)
+            {
+                if (!String.IsNullOrEmpty(user.Login) && !String.IsNullOrEmpty(user.Email))
+                {
+                    user_db.Login = user.Login;
+                    user_db.Email = user.Email;
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("AccountPanel");
+                }
+            }
+            ModelState.AddModelError("", "Некорректные данные");
+            return View(user);
         }
 
         [Authorize]

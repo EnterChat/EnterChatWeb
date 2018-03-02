@@ -1,14 +1,13 @@
-﻿@using System.Security.Claims
-
+﻿@model EnterChatWeb.Models.User
 
 <head>
     <title>Аккаунт пользователя</title>
 </head>
 <h1> Панель управления аккаунтом пользователя</h1>
 
-@foreach (var claim in User.Claims.ToList())
-{
-    <p>@claim.Type : @claim.Value</p>
-}
+<p>Логин: @Model.Login</p>
+<p>Почта: @Model.Email</p>
+<p>Дата регистрации: @Model.RegistrationDate</p>
 
+<p><a class="btn btn-primary" asp-controller="Data" asp-action="EditUser" asp-route-id="@Model.ID">Изменить данные</a></p>
 <p><a class="btn btn-primary" asp-controller="Account" asp-action="Logout">Выйти из аккаунта</a></p>
