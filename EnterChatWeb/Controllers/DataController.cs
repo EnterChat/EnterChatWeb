@@ -34,7 +34,11 @@ namespace EnterChatWeb.Controllers
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
             var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
-            return View(workers);
+            var company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == comp_id);
+            AdminPanelModel model = new AdminPanelModel();
+            model.Company = company;
+            model.Workers = workers;
+            return View(model);
         }
 
         [Authorize]
@@ -68,9 +72,11 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
-        public IActionResult Workers()
+        public async Task<IActionResult> Workers()
         {
-            return View();
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+            var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
+            return View(workers);
         }
 
         [Authorize]
@@ -78,6 +84,40 @@ namespace EnterChatWeb.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        public async Task<IActionResult> EditCompany(int? id)
+        {
+            if (id != null)
+            {
+                Company company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == id);
+                if (company != null)
+                {
+                    return View(company);
+                }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditCompany(Company company)
+        {
+            var company_db = await _context.Companies.FirstOrDefaultAsync(c => c.ID == company.ID);
+            if (company_db != null)
+            {
+                if (!String.IsNullOrEmpty(company.Title) && !String.IsNullOrEmpty(company.WorkEmail))
+                {
+                    company_db.Title = company.Title;
+                    company_db.WorkEmail = company.WorkEmail;
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("AdminPanel");
+                }
+                ModelState.AddModelError("", "Некорректные данные");
+            }
+            return View(company);
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddWorker(Worker worker)
@@ -95,7 +135,7 @@ namespace EnterChatWeb.Controllers
 
         }
         [Authorize]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> EditWorker(int? id)
         {
             if (id != null)
             {
@@ -110,7 +150,7 @@ namespace EnterChatWeb.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(Worker worker)
+        public async Task<IActionResult> EditWorker(Worker worker)
         {
             if (ModelState.IsValid)
             {
@@ -147,7 +187,7 @@ namespace EnterChatWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteWorker(int? id)
         {
             if (id != null)
             {

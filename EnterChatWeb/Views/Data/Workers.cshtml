@@ -1,5 +1,19 @@
 ﻿@model IEnumerable<EnterChatWeb.Models.Worker>
 
-<h1>Список работников</h1>
+<head>
+    <title>Сотрудники</title>
+</head>
 
-<p>Здесь можно посмотреть список работников компании.</p>
+<h1>Список сотрудников</h1>
+
+<table class="table">
+    <tr><td>Имя</td><td>Фамилия</td><td>Админ?</td><td>Инвайт-код</td></tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.FirstName</td>
+            <td>@item.SecondName</td>
+            <td>@item.StringStatus</td>
+        </tr>
+    }
+</table>

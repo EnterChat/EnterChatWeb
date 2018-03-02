@@ -1,0 +1,18 @@
+﻿@model EnterChatWeb.Models.Company
+@{ 
+    Layout = null;
+}
+
+<form asp-action="EditCompany" asp-controller="Data" asp-route-id="@Model.ID">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label">Название</label>
+        <input type="text" asp-for="Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="WorkEmail" class="control-label">Корпоративная почта</label>
+        <input type="text" asp-for="WorkEmail" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Сохранить" class="btn btn-default" />
+    </div>
+</form>

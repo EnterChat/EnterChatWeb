@@ -1,14 +1,23 @@
-﻿@model IEnumerable<EnterChatWeb.Models.Worker> 
+﻿@model EnterChatWeb.Models.AdminPanelModel
 @using System.Security.Claims
 
-<h1>Панель управления компанией @User.FindFirst(x => x.Type == "Company").Value</h1>
+<head>
+    <title>Панель администратора</title>
+</head>
+
+<h1>Панель управления компанией @Model.Company.Title</h1>
 <h2>Информация</h2>
-<p>Здесь можно будет посмотреть информацию о компании и изменить её</p>
+<p>Название компании: @Model.Company.Title</p>
+<p>Адрес корпоративной почты: @Model.Company.WorkEmail</p>
+<p>Дата регистрации: @Model.Company.CreationDate</p>
+
+<a asp-action="EditCompany" asp-controller="Data" asp-route-id="@Model.Company.ID">Изменить данные компании</a>
+
 <h2>Список работников</h2>
 <a asp-action="AddWorker">Добавить сотрудника</a>
 <table class="table">
     <tr><td>Имя</td><td>Фамилия</td><td>Админ?</td><td>Инвайт-код</td></tr>
-    @foreach (var item in Model)
+    @foreach (var item in Model.Workers)
     {
     <tr>
         <td>@item.FirstName</td>
@@ -21,8 +30,8 @@ else
 {
     <td>@item.InviteCode</td>}
         <td>
-            <a asp-action="Edit" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
-            <a asp-action="Delete" asp-controller="Data" asp-route-id="@item.ID">Удалить</a>
+            <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
+            <a asp-action="DeleteWorker" asp-controller="Data" asp-route-id="@item.ID">Удалить</a>
         </td>
     </tr>
     }
