@@ -58,6 +58,7 @@ namespace EnterChatWeb.Controllers
                         user = new User
                         {
                             Login = model.Login,
+                            RegistrationDate = DateTime.Now,
                             Password = model.Password,
                             Email = model.Email,
                             Worker = worker,
