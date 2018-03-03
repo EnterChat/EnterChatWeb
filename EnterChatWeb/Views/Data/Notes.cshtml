@@ -1,7 +1,21 @@
-﻿<head>
+﻿@model IEnumerable<EnterChatWeb.Models.Note>
+
+<head>
     <title>Заметки</title>
 </head>
 
 <h1>Заметки компании</h1>
+<a asp-action="AddNote" asp-controller="Data">Добавить заметку</a>
+<ul class="list-group">
+    @foreach (var item in Model)
+    {
+    <li class="list-group-item">
+        <p>Тема: @item.Title</p>
+        <p>@item.Text</p>
+        <p>Создано: @item.CreationDate</p>
+        <a asp-action="EditNote" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
+        <a asp-action="DeleteNote" asp-controller="Data" asp-route-id="@item.ID">Удалить</a>
+    </li>
+    }
+</ul>
 
-<p>Здесь можно посмотреть заметки компании</p>

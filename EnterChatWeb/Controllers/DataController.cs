@@ -174,10 +174,104 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
-        public IActionResult Notes()
+        public async Task<IActionResult> Notes()
+        {
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+            var notes = await _context.Notes.Where(n => n.CompanyID == comp_id).ToListAsync();
+            return View(notes);
+        }
+
+        [Authorize]
+        public IActionResult AddNote()
         {
             return View();
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddNote(Note note)
+        {
+            if (ModelState.IsValid)
+            {
+                int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+                int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                note.CompanyID = comp_id;
+                note.UserID = user_id;
+                note.CreationDate = DateTime.Now;
+                _context.Notes.Add(note);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Notes");
+            }
+            ModelState.AddModelError("", "Некорректные данные");
+            return View(note);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> EditNote(int? id)
+        {
+            if (id != null)
+            {
+                Note note = await _context.Notes.FirstOrDefaultAsync(n => n.ID == id);
+                if (note != null)
+                {
+                    return View(note);
+                }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditNote(Note note)
+        {
+            if (ModelState.IsValid)
+            {
+                var db_note = await _context.Notes.FirstOrDefaultAsync(n => n.ID == note.ID);
+                if (db_note != null)
+                {
+                    db_note.Title = note.Title;
+                    db_note.Text = note.Text;
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Notes");
+                }
+            }
+            ModelState.AddModelError("", "Некорректные данные");
+            return View(note);
+        }
+
+        [HttpGet]
+        [ActionName("DeleteNote")]
+        public IActionResult ConfirmDeleteNote(int? id)
+        {
+            if (id != null)
+            {
+                Note note = _context.Notes.FirstOrDefault(n => n.ID == id);
+                if (note != null)
+                {
+                    return View(note);
+                }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteNote(int? id)
+        {
+            if (id != null)
+            {
+                Note note = await _context.Notes.FirstOrDefaultAsync(n => n.ID == id);
+                if (note != null)
+                {
+                    _context.Notes.Remove(note);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Notes");
+                }
+            }
+            return NotFound();
+        }
+
+
 
         [Authorize]
         public IActionResult Topics()

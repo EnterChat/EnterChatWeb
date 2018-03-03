@@ -14,7 +14,9 @@ namespace EnterChatWeb.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreationDate { get; set; }
+        [Required(ErrorMessage = "Пожалуйста, введите тему заметки!")]
         public string Title { get; set; }
+        [Required(ErrorMessage = "Пожалуйста, введите текст заметки!")]
         public string Text { get; set; }
 
         public User User { get; set; }
