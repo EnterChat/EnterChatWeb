@@ -1,7 +1,25 @@
-﻿<head>
+﻿@model IEnumerable<EnterChatWeb.Models.File>
+
+<head>
     <title>Файлы</title>
 </head>
 
-<h1>Файлы</h1>
+<h1>Файлы компании</h1>
+<table class="table">
+    <tr><td>Ссылка</td><td>Дата создания</td></tr>
 
-<p>Здесь можно посмотреть список файлов компании</p>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><a href="@Url.Content(item.Link)">@item.Name</a></td>
+            <td>@item.CreationDate</td>
+            <td> <a asp-action="DeleteFile" asp-controller="Data" asp-route-id="@item.ID">Удалить</a></td>
+        </tr>
+    }
+</table>
+
+<h3>Выберите файл для загрузки</h3>
+<form asp-action="AddFile" asp-controller="Data" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadedFile" /><br>
+    <input type="submit" value="Загрузить" />
+</form>

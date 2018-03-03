@@ -1,0 +1,26 @@
+﻿@model EnterChatWeb.Models.File
+@{
+    Layout = null;
+}
+<div>
+    <dl class="dl-horizontal">
+        <dt>Имя</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>Фамилия</dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+    </dl>
+
+    <div>
+        <form asp-controller="Data" asp-action="DeleteFile" method="post">
+            <div class="form-group">
+                <input type="submit" class="btn btn-default" value="Удалить" />
+            </div>
+        </form>
+    </div>
+
+</div>

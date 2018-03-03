@@ -1,10 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EnterChatWeb.Data;
 using EnterChatWeb.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +18,12 @@ namespace EnterChatWeb.Controllers
     public class DataController : Controller
     {
         private EnterChatContext _context;
+        private IHostingEnvironment _appEnvironment;
 
-        public DataController(EnterChatContext context)
+        public DataController(EnterChatContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _appEnvironment = hostingEnvironment;
         }
 
         [Authorize]
@@ -84,10 +89,83 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
-        public IActionResult Files()
+        public async Task<IActionResult> Files()
         {
-            return View();
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+            var files = await _context.Files.Where(f => f.CompanyID == comp_id).ToListAsync();
+            return View(files);
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddFile(IFormFile uploadedFile)
+        {
+            if (uploadedFile != null)
+            {
+                // путь к папке Files
+                string path = "/files/" + uploadedFile.FileName;
+                // сохраняем файл в папку Files в каталоге wwwroot
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+
+                int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+                int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                Models.File file = new Models.File
+                {
+                    CompanyID = comp_id,
+                    UserID = user_id,
+                    Name = uploadedFile.FileName,
+                    Link = path,
+                    CreationDate = DateTime.Now
+                };
+
+                _context.Files.Add(file);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Files");
+        }
+
+        [Authorize]
+        [ActionName("DeleteFile")]
+        public IActionResult ConfirmDeleteFile(int? id)
+        {
+            if (id != null)
+            {
+                Models.File file = _context.Files.FirstOrDefault(w => w.ID == id);
+                if (file != null)
+                {
+                    return View(file);
+                }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteFile(int? id)
+        {
+            if (id != null)
+            {
+                Models.File file = await _context.Files.FirstOrDefaultAsync(f => f.ID == id);
+                if (file != null)
+                {
+                    _context.Files.Remove(file);
+                    await _context.SaveChangesAsync();
+                    string path = "/files/" + file.Name;
+                    if (System.IO.File.Exists(_appEnvironment.WebRootPath + path))
+                    {
+                        System.IO.File.Delete(_appEnvironment.WebRootPath + path);
+                    }
+                    return RedirectToAction("Files");
+                }
+            }
+            return NotFound();
+        }
+
 
         [Authorize]
         public IActionResult GroupChat()
@@ -208,7 +286,7 @@ namespace EnterChatWeb.Controllers
         }
 
         [HttpGet]
-        [ActionName("Delete")]
+        [ActionName("DeleteWorker")]
         public IActionResult ConfirmDelete(int? id)
         {
             if (id != null)
