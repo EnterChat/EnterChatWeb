@@ -379,6 +379,53 @@ namespace EnterChatWeb.Controllers
             return View(worker);
         }
 
+        [Authorize]
+        public async Task<IActionResult> EditAdmin(int? id)
+        {
+            if (id != null)
+            {
+                Worker worker = await _context.Workers.FirstOrDefaultAsync(w => w.ID == id);
+
+
+                if (worker != null)
+                {
+                    AdminModelEdit adminModelEdit = new AdminModelEdit
+                    {
+                        ID = worker.ID,
+                        CompanyID = worker.CompanyID,
+                        FirstName = worker.FirstName,
+                        SecondName = worker.SecondName,
+                        Status = worker.Status
+                    };
+
+                    return View(adminModelEdit);
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> EditAdmin(AdminModelEdit model)
+        {
+            if (ModelState.IsValid)
+            {
+                var db_worker = _context.Workers.FirstOrDefault(w => w.ID == model.ID);
+                if (db_worker != null)
+                {
+                    db_worker.FirstName = model.FirstName;
+                    db_worker.SecondName = model.SecondName;
+                    db_worker.Status = model.Status;
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("AdminPanel");
+                }
+                ModelState.AddModelError("", "Некорректные данные");
+            }
+
+            ModelState.AddModelError("", "Некорректные данные");
+            return View(model);
+        }
+
         [HttpGet]
         [ActionName("DeleteWorker")]
         public IActionResult ConfirmDelete(int? id)

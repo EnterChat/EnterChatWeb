@@ -13,13 +13,10 @@
         <label asp-for="SecondName" class="control-label">Фамилия</label>
         <input type="text" asp-for="SecondName" class="form-control" />
     </div>
-    @if (Model.Status == false)
-    {
-        <div class="form-group">
+    <div class="form-group">
             <label asp-for="InviteCode" class="control-label">Пригласительный код</label>
             <input type="text" asp-for="InviteCode" class="form-control" />
-        </div>
-    }
+    </div>
     <div class="checkbox">
         <label asp-for="Status" class="control-label">Админ?</label>
         <input asp-for="Status" type="checkbox" />

@@ -18,7 +18,7 @@
 
 
         @foreach (var item in Model.Workers)
-    {
+        {
 
     <div class="list-group-item col-xs-6">
         <h4>@item.FirstName @item.SecondName</h4>
@@ -33,12 +33,22 @@ else
     <p>Инвайт-код: @item.InviteCode</p>
 
 }
-        <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
-        @if (item.Status == false)
+        @if (item.InviteCode == null)
+    {
+        <a asp-action="EditAdmin" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
+
+}
+else
+{
+
+    <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
+}
+
+        @if (item.ID != int.Parse(User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value))
     {
         <a asp-action="DeleteWorker" asp-controller="Data" asp-route-id="@item.ID">Удалить</a>
 }
 
     </div>
-}
+        }
 </div>
