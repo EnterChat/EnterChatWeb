@@ -9,8 +9,8 @@ namespace EnterChatWeb.Models
     public class Topic
     {
         public int ID { get; set; }
-        public int CompanyID { get; set; }
-        public int UserID { get; set; }
+        public int? CompanyID { get; set; }
+        public int? UserID { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreationDate { get; set; }

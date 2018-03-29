@@ -6,14 +6,15 @@
 
 <h1>Список сотрудников</h1>
 
-<table class="table">
-    <tr><td>Имя</td><td>Фамилия</td><td>Админ?</td></tr>
+<div class="list-group">
+
+
     @foreach (var item in Model)
     {
-        <tr>
-            <td>@item.FirstName</td>
-            <td>@item.SecondName</td>
-            <td>@item.StringStatus</td>
-        </tr>
+
+        <div class="list-group-item col-xs-6">
+            <h4>@item.FirstName @item.SecondName</h4>
+            <p>Админ? @item.StringStatus</p>
+        </div>
     }
-</table>
+</div>

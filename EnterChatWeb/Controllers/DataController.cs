@@ -284,6 +284,14 @@ namespace EnterChatWeb.Controllers
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
             var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
+            foreach (Worker w in workers)
+            {
+                User user = await _context.Users.Where(x => x.ID == w.ID).FirstAsync();
+                if (user != null)
+                {
+                    
+                }
+            }
             return View(workers);
         }
 

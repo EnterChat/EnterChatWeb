@@ -17,7 +17,7 @@ namespace EnterChatWeb.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
+                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("EnterChatWeb.Models.Company", b =>
@@ -41,7 +41,7 @@ namespace EnterChatWeb.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CompanyID");
+                    b.Property<int?>("CompanyID");
 
                     b.Property<DateTime>("CreationDate");
 
@@ -49,7 +49,7 @@ namespace EnterChatWeb.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("UserID");
+                    b.Property<int?>("UserID");
 
                     b.HasKey("ID");
 
@@ -87,15 +87,17 @@ namespace EnterChatWeb.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CompanyID");
+                    b.Property<int?>("CompanyID");
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .IsRequired();
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .IsRequired();
 
-                    b.Property<int>("UserID");
+                    b.Property<int?>("UserID");
 
                     b.HasKey("ID");
 
@@ -111,13 +113,13 @@ namespace EnterChatWeb.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CompanyID");
+                    b.Property<int?>("CompanyID");
 
                     b.Property<DateTime>("CreationDate");
 
                     b.Property<string>("Title");
 
-                    b.Property<int>("UserID");
+                    b.Property<int?>("UserID");
 
                     b.HasKey("ID");
 
@@ -133,15 +135,15 @@ namespace EnterChatWeb.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CompanyID");
+                    b.Property<int?>("CompanyID");
 
                     b.Property<DateTime>("CreationDate");
 
                     b.Property<string>("Text");
 
-                    b.Property<int>("TopicID");
+                    b.Property<int?>("TopicID");
 
-                    b.Property<int>("UserID");
+                    b.Property<int?>("UserID");
 
                     b.HasKey("ID");
 
@@ -159,7 +161,7 @@ namespace EnterChatWeb.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CompanyID");
+                    b.Property<int?>("CompanyID");
 
                     b.Property<string>("Email");
 
@@ -169,7 +171,7 @@ namespace EnterChatWeb.Migrations
 
                     b.Property<DateTime>("RegistrationDate");
 
-                    b.Property<int>("WorkerID");
+                    b.Property<int?>("WorkerID");
 
                     b.HasKey("ID");
 
@@ -185,13 +187,16 @@ namespace EnterChatWeb.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CompanyID");
+                    b.Property<int?>("CompanyID");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired();
 
-                    b.Property<int?>("InviteCode");
+                    b.Property<int?>("InviteCode")
+                        .IsRequired();
 
-                    b.Property<string>("SecondName");
+                    b.Property<string>("SecondName")
+                        .IsRequired();
 
                     b.Property<bool>("Status");
 
@@ -206,13 +211,11 @@ namespace EnterChatWeb.Migrations
                 {
                     b.HasOne("EnterChatWeb.Models.Company", "Company")
                         .WithMany("Files")
-                        .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CompanyID");
 
                     b.HasOne("EnterChatWeb.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("EnterChatWeb.Models.GroupChatMessage", b =>
@@ -220,77 +223,67 @@ namespace EnterChatWeb.Migrations
                     b.HasOne("EnterChatWeb.Models.Company", "Company")
                         .WithMany("GroupChatMessages")
                         .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EnterChatWeb.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EnterChatWeb.Models.Note", b =>
                 {
                     b.HasOne("EnterChatWeb.Models.Company", "Company")
                         .WithMany("Notes")
-                        .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CompanyID");
 
                     b.HasOne("EnterChatWeb.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("EnterChatWeb.Models.Topic", b =>
                 {
                     b.HasOne("EnterChatWeb.Models.Company", "Company")
                         .WithMany("Topics")
-                        .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CompanyID");
 
                     b.HasOne("EnterChatWeb.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("EnterChatWeb.Models.TopicMessage", b =>
                 {
                     b.HasOne("EnterChatWeb.Models.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CompanyID");
 
                     b.HasOne("EnterChatWeb.Models.Topic", "Topic")
                         .WithMany("TopicMessages")
-                        .HasForeignKey("TopicID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("TopicID");
 
                     b.HasOne("EnterChatWeb.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("EnterChatWeb.Models.User", b =>
                 {
                     b.HasOne("EnterChatWeb.Models.Company", "Company")
                         .WithMany("Users")
-                        .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CompanyID");
 
                     b.HasOne("EnterChatWeb.Models.Worker", "Worker")
                         .WithMany()
-                        .HasForeignKey("WorkerID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("WorkerID");
                 });
 
             modelBuilder.Entity("EnterChatWeb.Models.Worker", b =>
                 {
                     b.HasOne("EnterChatWeb.Models.Company", "Company")
                         .WithMany("Workers")
-                        .HasForeignKey("CompanyID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CompanyID");
                 });
 #pragma warning restore 612, 618
         }
