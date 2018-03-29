@@ -144,7 +144,8 @@ namespace EnterChatWeb.Controllers
                         Password = model.Password,
                         Login = model.Login,
                         Company = company,
-                        Worker = worker
+                        Worker = worker,
+                        RegistrationDate = DateTime.Now
                     };
 
                     _context.Users.Add(user);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -284,15 +285,23 @@ namespace EnterChatWeb.Controllers
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
             var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
+            List<UserPlusWorkerModel> models = new List<UserPlusWorkerModel>();
             foreach (Worker w in workers)
             {
-                User user = await _context.Users.Where(x => x.ID == w.ID).FirstAsync();
+                User user = await _context.Users.Where(x => x.ID == w.ID).FirstOrDefaultAsync();
                 if (user != null)
                 {
-                    
+                    UserPlusWorkerModel model = new UserPlusWorkerModel
+                    {
+                        FirstName = w.FirstName,
+                        SecondName = w.SecondName,
+                        Status = w.Status,
+                        Email = user.Email
+                    };
+                    models.Add(model);
                 }
             }
-            return View(workers);
+            return View(models);
         }
 
         [Authorize]

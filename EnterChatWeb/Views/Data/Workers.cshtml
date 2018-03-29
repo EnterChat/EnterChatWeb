@@ -1,10 +1,10 @@
-﻿@model IEnumerable<EnterChatWeb.Models.Worker>
+﻿@model IEnumerable<EnterChatWeb.Models.UserPlusWorkerModel>
 
 <head>
     <title>Сотрудники</title>
 </head>
 
-<h1>Список сотрудников</h1>
+<h1>Список сотрудников (@Model.Count()):</h1>
 
 <div class="list-group">
 
@@ -15,6 +15,7 @@
         <div class="list-group-item col-xs-6">
             <h4>@item.FirstName @item.SecondName</h4>
             <p>Админ? @item.StringStatus</p>
+            <p>@item.Email</p>
         </div>
     }
 </div>
