@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EnterChatWeb.Data;
 using EnterChatWeb.Models;
+using EnterChatWeb.Models.ExtraModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,12 +40,18 @@ namespace EnterChatWeb.Controllers
         public async Task<IActionResult> AdminPanel()
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
-            var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
+            var deps = await _context.Departments.Where(d => d.CompanyID == comp_id).ToListAsync();
+            //var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
+            foreach (Department dep in deps)
+            {
+                var workers = await _context.Workers.Where(x => x.DepartmentID == dep.ID).ToListAsync();
+                if (workers != null) dep.Workers = workers;
+            }
             var company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == comp_id);
             /*AdminPanelModel model = new AdminPanelModel();
             model.Company = company;
             model.Workers = workers;*/
-            company.Workers = workers;
+            company.Departments = deps;
             return View(company);
         }
 
@@ -284,30 +291,14 @@ namespace EnterChatWeb.Controllers
         public async Task<IActionResult> Workers()
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
-            var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
-            List<UserPlusWorkerModel> models = new List<UserPlusWorkerModel>();
-            foreach (Worker w in workers)
+            //var workers = await _context.Workers.Where(x => x.CompanyID == comp_id).ToListAsync();
+            var departments = await _context.Departments.Where(d => d.CompanyID == comp_id).ToListAsync();
+            foreach (Department dep in departments)
             {
-                User user = await _context.Users.Where(x => x.ID == w.ID).FirstOrDefaultAsync();
-                if (user != null)
-                {
-                    UserPlusWorkerModel model = new UserPlusWorkerModel
-                    {
-                        FirstName = w.FirstName,
-                        SecondName = w.SecondName,
-                        Status = w.Status,
-                        Email = user.Email
-                    };
-                    models.Add(model);
-                }
+                var workers = await _context.Workers.Where(w => w.DepartmentID == dep.ID).ToListAsync();
+                if(workers != null) dep.Workers = workers;
             }
-            return View(models);
-        }
-
-        [Authorize]
-        public IActionResult AddWorker()
-        {
-            return View();
+            return View(departments);
         }
 
         [Authorize]
@@ -344,19 +335,59 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> AddWorker()
+        {
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+            var departments = await _context.Departments.Where(d => d.CompanyID == comp_id).ToListAsync();
+            WorkerPlusDepsList list = new WorkerPlusDepsList();
+            list.Departments = departments;
+            return View(list);
+        }
+
+        [Authorize]
+        public ActionResult AddDep()
+        {
+            return View();
+        }
+
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddWorker(Worker worker)
+        public async Task<IActionResult> AddDep(Department department)
         {
             if (ModelState.IsValid)
             {
                 int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
-                worker.CompanyID = comp_id;
+                department.CompanyID = comp_id;
+                _context.Departments.Add(department);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("AdminPanel");
+            }
+            ModelState.AddModelError("", "Некорректные данные");
+            return View(department);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddWorker(WorkerPlusDepsList workerModel)
+        {
+            if (ModelState.IsValid)
+            {
+                int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+                Worker worker = new Worker
+                {
+                    CompanyID = comp_id,
+                    FirstName = workerModel.FirstName,
+                    SecondName = workerModel.SecondName,
+                    DepartmentID = workerModel.DepartmentID,
+                    InviteCode = workerModel.InviteCode
+                };
+                
                 _context.Workers.Add(worker);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("AdminPanel");
             }
             ModelState.AddModelError("", "Некорректные имя и/или фамилия");
-            return View(worker);
+            return View(workerModel);
 
         }
         [Authorize]
@@ -384,7 +415,7 @@ namespace EnterChatWeb.Controllers
                 {
                     db_worker.FirstName = worker.FirstName;
                     db_worker.SecondName = worker.SecondName;
-                    db_worker.Status = worker.Status;
+                    //db_worker.Status = worker.Status;
                     db_worker.InviteCode = worker.InviteCode;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("AdminPanel");
@@ -412,7 +443,7 @@ namespace EnterChatWeb.Controllers
                         CompanyID = worker.CompanyID,
                         FirstName = worker.FirstName,
                         SecondName = worker.SecondName,
-                        Status = worker.Status
+                        //Status = worker.Status
                     };
 
                     return View(adminModelEdit);
@@ -432,7 +463,7 @@ namespace EnterChatWeb.Controllers
                 {
                     db_worker.FirstName = model.FirstName;
                     db_worker.SecondName = model.SecondName;
-                    db_worker.Status = model.Status;
+                    //db_worker.Status = model.Status;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("AdminPanel");
                 }

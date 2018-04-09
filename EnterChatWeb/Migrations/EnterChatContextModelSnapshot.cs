@@ -36,6 +36,25 @@ namespace EnterChatWeb.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("EnterChatWeb.Models.Department", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("CompanyID");
+
+                    b.Property<bool>("Status");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CompanyID");
+
+                    b.ToTable("Departments");
+                });
+
             modelBuilder.Entity("EnterChatWeb.Models.File", b =>
                 {
                     b.Property<int>("ID")
@@ -189,6 +208,8 @@ namespace EnterChatWeb.Migrations
 
                     b.Property<int?>("CompanyID");
 
+                    b.Property<int?>("DepartmentID");
+
                     b.Property<string>("FirstName")
                         .IsRequired();
 
@@ -198,13 +219,20 @@ namespace EnterChatWeb.Migrations
                     b.Property<string>("SecondName")
                         .IsRequired();
 
-                    b.Property<bool>("Status");
-
                     b.HasKey("ID");
 
                     b.HasIndex("CompanyID");
 
+                    b.HasIndex("DepartmentID");
+
                     b.ToTable("Worker");
+                });
+
+            modelBuilder.Entity("EnterChatWeb.Models.Department", b =>
+                {
+                    b.HasOne("EnterChatWeb.Models.Company", "Company")
+                        .WithMany("Departments")
+                        .HasForeignKey("CompanyID");
                 });
 
             modelBuilder.Entity("EnterChatWeb.Models.File", b =>
@@ -284,6 +312,10 @@ namespace EnterChatWeb.Migrations
                     b.HasOne("EnterChatWeb.Models.Company", "Company")
                         .WithMany("Workers")
                         .HasForeignKey("CompanyID");
+
+                    b.HasOne("EnterChatWeb.Models.Department", "Department")
+                        .WithMany("Workers")
+                        .HasForeignKey("DepartmentID");
                 });
 #pragma warning restore 612, 618
         }

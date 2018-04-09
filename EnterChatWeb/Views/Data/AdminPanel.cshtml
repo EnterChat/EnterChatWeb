@@ -13,42 +13,41 @@
 
 <a  class="btn btn-primary" asp-action="EditCompany" asp-controller="Data" asp-route-id="@Model.ID">Изменить данные компании</a>
 
-<h2>Список работников <a class="btn btn-primary" asp-action="AddWorker">Добавить сотрудника</a></h2>
+<h2>Список отделов и работников <a class="btn btn-primary" asp-action="AddWorker">Добавить сотрудника</a> 
+                                <a class="btn btn-primary" asp-action="AddDep">Добавить отдел</a></h2>
 <div class="list-group">
-
-
-        @foreach (var item in Model.Workers)
-        {
-
-    <div class="list-group-item col-xs-6">
-        <h4>@item.FirstName @item.SecondName</h4>
-        <p>Админ? @item.StringStatus</p>
-        @if (item.InviteCode == null)
+    @foreach (var item in Model.Departments)
     {
-        <p>Инвайт-кода нет</p>
+        <h3>@item.Title</h3>
+        <p>Привилегии администратора: @item.StringStatus</p>
+        <div class="list-group">
+            @foreach (var worker in item.Workers)
+            {
+                <div class="list-group-item col-xs-6">
+                    <h4>@worker.FirstName @worker.SecondName</h4>
+                    @if (worker.InviteCode == null)
+                    {
+                        <p>Инвайт-кода нет</p>
+                    }
+                    else
+                    {
+                        <p>Инвайт-код: @worker.InviteCode</p>
+                    }
+                    @if (worker.InviteCode == null)
+                    {
+                        <a asp-action="EditAdmin" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
+                    }
+                    else
+                    {
+                        <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
+                    }
+                    @if (worker.ID != int.Parse(User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value))
+                    {
+                        <a asp-action="DeleteWorker" asp-controller="Data" asp-route-id="@item.ID">Удалить</a>
+                    }
+                </div>
 
-}
-else
-{
-    <p>Инвайт-код: @item.InviteCode</p>
-
-}
-        @if (item.InviteCode == null)
-    {
-        <a asp-action="EditAdmin" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
-
-}
-else
-{
-
-    <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@item.ID">Изменить</a>
-}
-
-        @if (item.ID != int.Parse(User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value))
-    {
-        <a asp-action="DeleteWorker" asp-controller="Data" asp-route-id="@item.ID">Удалить</a>
-}
-
-    </div>
-        }
+            }
+        </div>
+    }
 </div>

@@ -25,5 +25,6 @@ namespace EnterChatWeb.Models
         public ICollection<File> Files { get; set; }
         public ICollection<Worker> Workers { get; set; }
         public ICollection<GroupChatMessage> GroupChatMessages { get; set; }
+        public ICollection<Department> Departments { get; set; }
     }
 }

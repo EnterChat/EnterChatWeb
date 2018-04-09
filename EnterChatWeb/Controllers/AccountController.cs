@@ -97,7 +97,9 @@ namespace EnterChatWeb.Controllers
                 if (user != null)
                 {
                     Worker worker = await _context.Workers.FirstOrDefaultAsync(u => u.ID == user.WorkerID);
+                    Department department = await _context.Departments.FirstOrDefaultAsync(d => d.ID == worker.DepartmentID);
                     Company company = await _context.Companies.FirstOrDefaultAsync(u => u.ID == user.CompanyID);
+                    worker.Department = department;
                     user.Worker = worker;
                     user.Company = company;
                     await Authenticate(user);
@@ -130,13 +132,22 @@ namespace EnterChatWeb.Controllers
                         CreationDate = DateTime.Now,
                         WorkEmail = model.WorkEmail
                     };
+
+                    Department department = new Department
+                    {
+                        Title = model.DepTitle,
+                        Status = true,
+                        Company = company
+                    };
+
                     Worker worker = new Worker
                     {
                         FirstName = model.FirstName,
                         SecondName = model.SecondName,
-                        Status = true,
+                        //Status = true,
                         InviteCode = null,
-                        Company = company
+                        Company = company,
+                        Department = department
                     };
                     user = new User
                     {
@@ -151,6 +162,7 @@ namespace EnterChatWeb.Controllers
                     _context.Users.Add(user);
                     _context.Companies.Add(company);
                     _context.Workers.Add(worker);
+                    _context.Departments.Add(department);
                     await _context.SaveChangesAsync();
 
                     await Authenticate(user);
@@ -176,7 +188,7 @@ namespace EnterChatWeb.Controllers
                 new Claim("SecondName", user.Worker.SecondName),
                 new Claim("Company", user.Company.Title),
                 new Claim("CompanyID", user.CompanyID.ToString()),
-                new Claim("Status", user.Worker.Status.ToString())
+                new Claim("Status", user.Worker.Department.Status.ToString())
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,

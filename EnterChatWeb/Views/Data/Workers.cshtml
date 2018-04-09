@@ -1,5 +1,4 @@
-﻿@model IEnumerable<EnterChatWeb.Models.UserPlusWorkerModel>
-
+﻿@model IEnumerable<EnterChatWeb.Models.Department>
 <head>
     <title>Сотрудники</title>
 </head>
@@ -8,14 +7,17 @@
 
 <div class="list-group">
 
-
     @foreach (var item in Model)
     {
+        <h3>@item.Title</h3>
+        <p>Привилегии администратора? @item.StringStatus</p>
+        @foreach (var worker in item.Workers)
+        {
+            <div class="list-group-item col-xs-6">
+                <h4>@worker.FirstName @worker.SecondName</h4>
+            </div>
 
-        <div class="list-group-item col-xs-6">
-            <h4>@item.FirstName @item.SecondName</h4>
-            <p>Админ? @item.StringStatus</p>
-            <p>@item.Email</p>
-        </div>
+        }
     }
+
 </div>
