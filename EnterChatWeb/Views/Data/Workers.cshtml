@@ -3,13 +3,13 @@
     <title>Сотрудники</title>
 </head>
 
-<h1>Список сотрудников (@Model.Count()):</h1>
+<h1>Список сотрудников:</h1>
 
 <div class="list-group">
 
     @foreach (var item in Model)
     {
-        <h3>@item.Title</h3>
+        <h3>@item.Title (@item.Workers.Count()):</h3>
         <p>Привилегии администратора? @item.StringStatus</p>
         @foreach (var worker in item.Workers)
         {

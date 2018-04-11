@@ -398,7 +398,17 @@ namespace EnterChatWeb.Controllers
                 Worker worker = await  _context.Workers.FirstOrDefaultAsync(w => w.ID == id);
                 if (worker != null)
                 {
-                    return View(worker);
+                    var departments = await _context.Departments.Where(d => d.CompanyID == worker.CompanyID).ToListAsync();
+                    WorkerPlusDepsList model = new WorkerPlusDepsList
+                    {
+                        FirstName = worker.FirstName,
+                        SecondName = worker.SecondName,
+                        InviteCode = worker.InviteCode,
+                        DepartmentID = worker.DepartmentID,
+                        ID = worker.ID,
+                        Departments = departments
+                    };
+                    return View(model);
                 }
             }
             return NotFound();
@@ -406,17 +416,17 @@ namespace EnterChatWeb.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> EditWorker(Worker worker)
+        public async Task<IActionResult> EditWorker(WorkerPlusDepsList model)
         {
             if (ModelState.IsValid)
             {
-                var db_worker = _context.Workers.FirstOrDefault(w => w.ID == worker.ID);
+                var db_worker = _context.Workers.FirstOrDefault(w => w.ID == model.ID);
                 if (db_worker != null)
                 {
-                    db_worker.FirstName = worker.FirstName;
-                    db_worker.SecondName = worker.SecondName;
-                    //db_worker.Status = worker.Status;
-                    db_worker.InviteCode = worker.InviteCode;
+                    db_worker.FirstName = model.FirstName;
+                    db_worker.SecondName = model.SecondName;
+                    db_worker.DepartmentID = model.DepartmentID;
+                    db_worker.InviteCode = model.InviteCode;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("AdminPanel");
                 }
@@ -424,7 +434,7 @@ namespace EnterChatWeb.Controllers
             }
 
             ModelState.AddModelError("", "Некорректные данные");
-            return View(worker);
+            return View(model);
         }
 
         [Authorize]

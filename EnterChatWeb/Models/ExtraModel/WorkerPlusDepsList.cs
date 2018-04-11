@@ -10,6 +10,7 @@ namespace EnterChatWeb.Models.ExtraModel
     {
         public ICollection<Department> Departments;
         public int? DepartmentID { get; set; }
+        public int? ID { get; set; }
         [Required(ErrorMessage = "Пожалуйста, введите имя работника!")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Пожалуйста, введите фамилию работника!")]
