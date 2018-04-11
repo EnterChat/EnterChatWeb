@@ -11,10 +11,18 @@
     {
         <h3>@item.Title (@item.Workers.Count()):</h3>
         <p>Привилегии администратора? @item.StringStatus</p>
-        @foreach (var worker in item.Workers)
+        @foreach (var worker in item.UserPlusWorkers)
         {
             <div class="list-group-item col-xs-6">
                 <h4>@worker.FirstName @worker.SecondName</h4>
+                 @if (@worker.Email != null && @worker.RegistrationDate != null)
+                    {
+                        <h5>@worker.Email Зарегистрировался: @worker.RegistrationDate</h5>
+                    }
+                    else
+                    {
+                        <h5>Ещё не активирован</h5>
+                    }
             </div>
 
         }

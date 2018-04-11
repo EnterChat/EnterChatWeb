@@ -45,7 +45,23 @@ namespace EnterChatWeb.Controllers
             foreach (Department dep in deps)
             {
                 var workers = await _context.Workers.Where(x => x.DepartmentID == dep.ID).ToListAsync();
-                if (workers != null) dep.Workers = workers;
+                List<UserPlusWorkerModel> userPlusWorkers = new List<UserPlusWorkerModel>();
+                if (workers != null)
+                {
+                    foreach (Worker w in workers)
+                    {
+                        UserPlusWorkerModel userPlusWorkerModel = new UserPlusWorkerModel(w.FirstName, w.SecondName, w.InviteCode);
+                        User user = await _context.Users.Where(u => u.WorkerID == w.ID).FirstOrDefaultAsync();
+                        if (user != null)
+                        {
+                            userPlusWorkerModel.RegistrationDate = user.RegistrationDate;
+                            userPlusWorkerModel.Email = user.Email;
+                        }
+                        userPlusWorkers.Add(userPlusWorkerModel);
+                    }
+                    dep.UserPlusWorkers = userPlusWorkers;
+                }
+
             }
             var company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == comp_id);
             /*AdminPanelModel model = new AdminPanelModel();
@@ -295,8 +311,23 @@ namespace EnterChatWeb.Controllers
             var departments = await _context.Departments.Where(d => d.CompanyID == comp_id).ToListAsync();
             foreach (Department dep in departments)
             {
-                var workers = await _context.Workers.Where(w => w.DepartmentID == dep.ID).ToListAsync();
-                if(workers != null) dep.Workers = workers;
+                var workers = await _context.Workers.Where(x => x.DepartmentID == dep.ID).ToListAsync();
+                List<UserPlusWorkerModel> userPlusWorkers = new List<UserPlusWorkerModel>();
+                if (workers != null)
+                {
+                    foreach (Worker w in workers)
+                    {
+                        UserPlusWorkerModel userPlusWorkerModel = new UserPlusWorkerModel(w.FirstName, w.SecondName, w.InviteCode);
+                        User user = await _context.Users.Where(u => u.WorkerID == w.ID).FirstOrDefaultAsync();
+                        if (user != null)
+                        {
+                            userPlusWorkerModel.RegistrationDate = user.RegistrationDate;
+                            userPlusWorkerModel.Email = user.Email;
+                        }
+                        userPlusWorkers.Add(userPlusWorkerModel);
+                    }
+                    dep.UserPlusWorkers = userPlusWorkers;
+                }
             }
             return View(departments);
         }

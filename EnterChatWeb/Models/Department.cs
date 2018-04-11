@@ -24,5 +24,6 @@ namespace EnterChatWeb.Models
 
         public Company Company { get; set; }
         public ICollection<Worker> Workers { get; set; }
+        public ICollection<UserPlusWorkerModel> UserPlusWorkers { get; set; }
     }
 }
