@@ -48,40 +48,49 @@ namespace EnterChatWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                Worker worker = await _context.Workers.FirstOrDefaultAsync(w => w.InviteCode == model.InviteCode);
-                if (worker != null)
+                Company companyTest = await _context.Companies.FirstOrDefaultAsync(c => c.Title.Equals(model.CompanyName));
+                if (companyTest != null)
                 {
-                    User user = await _context.Users.FirstOrDefaultAsync(u => u.ID == worker.ID);
-                    if (user == null)
+                    Worker worker = await _context.Workers.FirstOrDefaultAsync(w => w.InviteCode == model.InviteCode);
+                    if (worker != null && worker.CompanyID == companyTest.ID)
                     {
-                        Company company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == worker.CompanyID);
-                        user = new User
+                        Department department = await _context.Departments.FirstOrDefaultAsync(d => d.ID == worker.DepartmentID);
+                        User user = await _context.Users.FirstOrDefaultAsync(u => u.ID == worker.ID);
+                        worker.Department = department;
+                        if (user == null)
                         {
-                            Login = model.Login,
-                            RegistrationDate = DateTime.Now,
-                            Password = model.Password,
-                            Email = model.Email,
-                            Worker = worker,
-                            Company = company
-                        };
-                        _context.Users.Add(user);
+                            user = new User
+                            {
+                                Login = model.Login,
+                                RegistrationDate = DateTime.Now,
+                                Password = model.Password,
+                                Email = model.Email,
+                                Worker = worker,
+                                Company = companyTest
+                            };
+                            _context.Users.Add(user);
 
-                        await _context.SaveChangesAsync();
+                            await _context.SaveChangesAsync();
 
-                        await Authenticate(user);
+                            await Authenticate(user);
 
-                        return RedirectToAction("About", "Home");
+                            return RedirectToAction("About", "Home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Такой код уже использован");
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Такой код уже использован");
+                        ModelState.AddModelError("", "Такого кода не существует!");
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Такого кода не существует");
+                    ModelState.AddModelError("", "Такой компании не существует!");
                 }
-                
+
             }
             return View(model);
         }
@@ -122,57 +131,66 @@ namespace EnterChatWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-                if (user == null)
+                Company companyTest = await _context.Companies.FirstOrDefaultAsync(c => c.Title.Equals(model.Title));
+                if (companyTest == null)
                 {
-                    //добавляем данные в бд
-                    Company company = new Company
+                    User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                    if (user == null)
                     {
-                        Title = model.Title,
-                        CreationDate = DateTime.Now,
-                        WorkEmail = model.WorkEmail
-                    };
+                        //добавляем данные в бд
+                        Company company = new Company
+                        {
+                            Title = model.Title,
+                            CreationDate = DateTime.Now,
+                            WorkEmail = model.WorkEmail
+                        };
 
-                    Department department = new Department
+                        Department department = new Department
+                        {
+                            Title = model.DepTitle,
+                            Status = true,
+                            Company = company
+                        };
+
+                        Worker worker = new Worker
+                        {
+                            FirstName = model.FirstName,
+                            SecondName = model.SecondName,
+                            //Status = true,
+                            InviteCode = null,
+                            Company = company,
+                            Department = department
+                        };
+                        user = new User
+                        {
+                            Email = model.Email,
+                            Password = model.Password,
+                            Login = model.Login,
+                            Company = company,
+                            Worker = worker,
+                            RegistrationDate = DateTime.Now
+                        };
+
+                        _context.Users.Add(user);
+                        _context.Companies.Add(company);
+                        _context.Workers.Add(worker);
+                        _context.Departments.Add(department);
+                        await _context.SaveChangesAsync();
+
+                        await Authenticate(user);
+
+                        return RedirectToAction("About", "Data");
+                    }
+                    else
                     {
-                        Title = model.DepTitle,
-                        Status = true,
-                        Company = company
-                    };
-
-                    Worker worker = new Worker
-                    {
-                        FirstName = model.FirstName,
-                        SecondName = model.SecondName,
-                        //Status = true,
-                        InviteCode = null,
-                        Company = company,
-                        Department = department
-                    };
-                    user = new User
-                    {
-                        Email = model.Email,
-                        Password = model.Password,
-                        Login = model.Login,
-                        Company = company,
-                        Worker = worker,
-                        RegistrationDate = DateTime.Now
-                    };
-
-                    _context.Users.Add(user);
-                    _context.Companies.Add(company);
-                    _context.Workers.Add(worker);
-                    _context.Departments.Add(department);
-                    await _context.SaveChangesAsync();
-
-                    await Authenticate(user);
-
-                    return RedirectToAction("About", "Data");
+                        ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    ModelState.AddModelError("", "Компания с таким названием уже зарегистрирована");
                 }
+               
             }
             return View(model);
         }

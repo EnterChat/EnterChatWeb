@@ -13,6 +13,10 @@
     <form asp-action="RegisterWorker" asp-controller="Account" method="post">
         <div asp-validation-summary="All"></div>
         <p>
+            <label asp-for="CompanyName">Название компании: </label>
+            <input asp-for="CompanyName" />
+        </p>
+        <p>
             <label asp-for="Login">Логин: </label>
             <input asp-for="Login" />
         </p>
@@ -26,7 +30,7 @@
         </p>
         <p>
             <label asp-for="InviteCode">Инвайт-код: </label>
-            <input asp-for="InviteCode" type="text"/>
+            <input asp-for="InviteCode" type="text" />
         </p>
         <button type="submit">Зарегистрироваться</button>
     </form>

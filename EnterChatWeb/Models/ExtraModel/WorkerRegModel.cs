@@ -8,6 +8,8 @@ namespace EnterChatWeb.Models
 {
     public class WorkerRegModel
     {
+        [Required(ErrorMessage = "Пожалуйста, введите название вашей компании!")]
+        public string CompanyName { get; set; }
         [Required(ErrorMessage = "Пожалуйста, придумайте логин!")]
         public string Login { get; set; }
         [Required(ErrorMessage = "Пожалуйста, введите адрес почты!")]
