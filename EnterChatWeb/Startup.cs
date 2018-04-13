@@ -59,6 +59,8 @@ namespace EnterChatWeb
 
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseWebSockets();
+            app.UseMiddleware<ChatWebSocketMiddleWare>();
 
             app.UseMvc(routes =>
             {

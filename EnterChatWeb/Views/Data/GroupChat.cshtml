@@ -4,4 +4,49 @@
 
 <h1>Групповой чат</h1>
 
-<p>Здесь будет групповой чат компании</p>
+<p id="msgs"></p>
+
+<div style="position:absolute;height:20px;bottom:10px;left:0; display:block;width:100%">
+    <input type="text" style="max-width:unset;width:100%;max-width:100%" id="MessageField"
+           placeholder="type message and press enter" />
+</div>
+
+@section Scripts{ 
+    <script>
+        $(function () {
+        var userName = "testUser";
+ 
+        var protocol = location.protocol === "https:" ? "wss:" : "ws:";
+        var wsUri = protocol + "//" + window.location.host;
+        var socket = new WebSocket(wsUri);
+        socket.onopen = e => {
+            console.log("socket opened", e);
+        };
+ 
+        socket.onclose = function (e) {
+            console.log("socket closed", e);
+        };
+ 
+        socket.onmessage = function (e) {
+            console.log(e);
+            $('#msgs').append(e.data + '<br />');
+        };
+ 
+        socket.onerror = function (e) {
+            console.error(e.data);
+        };
+ 
+        $('#MessageField').keypress(function (e) {
+            if (e.which != 13) {
+                return;
+            }
+ 
+            e.preventDefault();
+ 
+            var message = userName + ": " + $('#MessageField').val();
+            socket.send(message);
+            $('#MessageField').val('');
+        });
+    });
+    </script>
+}

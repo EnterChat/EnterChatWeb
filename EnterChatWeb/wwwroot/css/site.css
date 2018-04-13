@@ -33,3 +33,15 @@
         display: none;
     }
 }
+
+.msg {
+    position: absolute;
+    top: 0;
+    bottom: 30px;
+    border: 1px solid green;
+    margin-bottom: auto;
+    display: block;
+    overflow: scroll;
+    width: 100%;
+    white-space: nowrap;
+}
