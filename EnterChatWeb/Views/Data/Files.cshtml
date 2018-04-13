@@ -5,21 +5,27 @@
 </head>
 
 <h1>Файлы компании</h1>
-<table class="table">
-    <tr><td>Ссылка</td><td>Дата создания</td></tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td><a href="@Url.Content(item.Link)">@item.Name</a></td>
-            <td>@item.CreationDate</td>
-            <td> <a asp-action="DeleteFile" asp-controller="Data" asp-route-id="@item.ID">Удалить</a></td>
-        </tr>
-    }
-</table>
+<div class="list-group">
+    <div class="list-group">
+        @foreach (File f in Model)
+        {
+            <div class="list-group-item col-xs-6">
+                <p><a href="@Url.Content(f.Link)">@f.Name</a></p>
+                <p>Создан: @f.CreationDate</p>
+                <p>Автор: @f.UserPlusWorker.FirstName @f.UserPlusWorker.SecondName @f.UserPlusWorker.Email</p>
+                <p>Отдел: @f.UserPlusWorker.DepartmentName</p>
+                <td> <a asp-action="DeleteFile" asp-controller="Data" asp-route-id="@f.ID">Удалить</a></td>
+            </div>
 
-<h3>Выберите файл для загрузки</h3>
-<form asp-action="AddFile" asp-controller="Data" method="post" enctype="multipart/form-data">
-    <input type="file" name="uploadedFile" /><br>
-    <input type="submit" value="Загрузить" />
-</form>
+        }
+    </div>
+</div>
+
+<div>
+    <h3>Выберите файл для загрузки</h3>
+    <form asp-action="AddFile" asp-controller="Data" method="post" enctype="multipart/form-data">
+        <input type="file" name="uploadedFile" /><br>
+        <input type="submit" value="Загрузить" />
+    </form>
+</div>

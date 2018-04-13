@@ -117,6 +117,15 @@ namespace EnterChatWeb.Controllers
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
             var files = await _context.Files.Where(f => f.CompanyID == comp_id).ToListAsync();
+            foreach (Models.File f in  files)
+            {
+                User user = await _context.Users.Where(w => w.ID == f.UserID).FirstOrDefaultAsync();
+                Worker worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
+                Department department = await _context.Departments.Where(d => d.ID == worker.DepartmentID).FirstOrDefaultAsync();
+                UserPlusWorkerModel model = new UserPlusWorkerModel(worker.FirstName, worker.SecondName,
+                    user.Email, department.Title);
+                f.UserPlusWorker = model;
+            }
             return View(files);
         }
 
