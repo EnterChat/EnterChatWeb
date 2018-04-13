@@ -15,7 +15,7 @@
                 <p>Создан: @f.CreationDate</p>
                 <p>Автор: @f.UserPlusWorker.FirstName @f.UserPlusWorker.SecondName @f.UserPlusWorker.Email</p>
                 <p>Отдел: @f.UserPlusWorker.DepartmentName</p>
-                <td> <a asp-action="DeleteFile" asp-controller="Data" asp-route-id="@f.ID">Удалить</a></td>
+                <a asp-action="DeleteFile" asp-controller="Data" asp-route-id="@f.ID">Удалить</a>
             </div>
 
         }

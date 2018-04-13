@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,9 @@ namespace EnterChatWeb.Models
         [Required(ErrorMessage = "Пожалуйста, введите текст заметки!")]
         public string Text { get; set; }
 
-        public User User { get; set; }
+        //public User User { get; set; }
+        [NotMapped]
+        public UserPlusWorkerModel UserPlusWorker { get; set; }
         public Company Company { get; set; }
     }
 }
