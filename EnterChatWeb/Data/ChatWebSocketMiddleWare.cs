@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EnterChatWeb.Models.ExtraModel;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using EnterChatWeb.Controllers;
 
 namespace EnterChatWeb.Data
 {
@@ -72,6 +72,9 @@ namespace EnterChatWeb.Data
 
         private static Task SendStringAsync(WebSocket socket, string data, CancellationToken ct = default(CancellationToken))
         {
+            var context = new EnterChatContext();
+            DataController dataController = new DataController(context);
+            dataController.AddMessage(data);
             var buffer = Encoding.UTF8.GetBytes(data);
             var segment = new ArraySegment<byte>(buffer);
             return socket.SendAsync(segment, WebSocketMessageType.Text, true, ct);

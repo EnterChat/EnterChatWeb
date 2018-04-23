@@ -14,6 +14,11 @@ namespace EnterChatWeb.Data
 
         }
 
+        public EnterChatContext()
+        {
+
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<TopicMessage> TopicMessages { get; set; }
         public DbSet<Topic> Topics { get; set; }

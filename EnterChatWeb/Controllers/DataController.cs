@@ -22,10 +22,15 @@ namespace EnterChatWeb.Controllers
         private EnterChatContext _context;
         private IHostingEnvironment _appEnvironment;
 
-        public DataController(EnterChatContext context, IHostingEnvironment hostingEnvironment)
+        //public DataController(EnterChatContext context, IHostingEnvironment hostingEnvironment)
+        //{
+        //    _context = context;
+        //    _appEnvironment = hostingEnvironment;
+        //}
+
+        public DataController(EnterChatContext context)
         {
             _context = context;
-            _appEnvironment = hostingEnvironment;
         }
 
         [Authorize]
@@ -201,10 +206,40 @@ namespace EnterChatWeb.Controllers
 
 
         [Authorize]
-        public IActionResult GroupChat()
+        public async Task<IActionResult> GroupChat()
         {
-            return View();
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+            int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var messages = await _context.GroupChatMessages.Where(m => m.CompanyID == comp_id).ToListAsync();
+            User user = await _context.Users.Where(u => u.ID == user_id).FirstOrDefaultAsync();
+            Worker worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
+            Department department = await _context.Departments.Where(d => d.ID == worker.DepartmentID).FirstOrDefaultAsync();
+
+            foreach (GroupChatMessage message in messages)
+            {
+                User _user = await _context.Users.Where(u => u.ID == message.UserID).FirstOrDefaultAsync();
+                Worker _worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
+                Department _department = await _context.Departments.Where(d => d.ID == worker.DepartmentID)
+                    .FirstOrDefaultAsync();
+                UserPlusWorkerModel _model = new UserPlusWorkerModel(_worker.FirstName, _worker.SecondName,
+                    _user.Email, _department.Title);
+                message.UserPlusWorker = _model;
+            }
+
+            GroupMessagePlusUser model = new GroupMessagePlusUser
+            {
+                UserID = user_id,
+                CompanyID = comp_id,
+                Email = user.Email,
+                FirstName = worker.FirstName,
+                SecondName = worker.SecondName,
+                DepartmentName = department.Title,
+                GroupMessages = messages
+            };
+
+            return View(model);
         }
+
 
         [Authorize]
         public async Task<IActionResult> Notes()
@@ -486,6 +521,22 @@ namespace EnterChatWeb.Controllers
             return View(model);
         }
 
+        public async void AddMessage(string inputMessage)
+        {
+            var user = inputMessage.Split(':')[0];
+            var message = inputMessage.Skip(user.Length);
+            var userModel = await _context.Users.FirstOrDefaultAsync(x => x.Login ==  message);
+            var companyModel =await _context.Companies.FirstOrDefaultAsync(x => x.Users == userModel);
+            GroupChatMessage newMessage = new GroupChatMessage
+            {
+                UserID = userModel.ID,
+                CompanyID = companyModel.ID,
+                Text = inputMessage,
+                CreationDate = DateTime.Now
+            };
+            await _context.GroupChatMessages.AddAsync(newMessage);
+            await _context.SaveChangesAsync();
+        }
         [Authorize]
         public async Task<IActionResult> EditAdmin(int? id)
         {

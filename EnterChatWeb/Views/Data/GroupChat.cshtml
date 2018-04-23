@@ -1,52 +1,79 @@
-﻿<head>
+﻿@model EnterChatWeb.Models.ExtraModel.GroupMessagePlusUser
+
+<head>
     <title>Чат компании</title>
 </head>
 
 <h1>Групповой чат</h1>
+<!-- <div class="list-group" id="kek">
+    @foreach (GroupChatMessage message in Model.GroupMessages)
+    {
+        <div class="list-group-item">
+            <p>@message.UserPlusWorker.FirstName @message.UserPlusWorker.SecondName 
+            @message.UserPlusWorker.DepartmentName @message.UserPlusWorker.Email</p>
+            <p>@message.Text</p>
+            <p>@message.CreationDate</p>
+        </div>
+    }
+</div> -->
+
 
 <p id="msgs"></p>
 
-<div style="position:absolute;height:20px;bottom:10px;left:0; display:block;width:100%">
-    <input type="text" style="max-width:unset;width:100%;max-width:100%" id="MessageField"
-           placeholder="type message and press enter" />
+<div style="position:absolute;height:20px;bottom:10px;left:0; display:inline;width:100%">
+    <input type="text" style="max-width:unset;width:100%;max-width:80%" id="MessageField"
+           placeholder="type message and press enter" data-firstname="@Model.FirstName"/>
+    <p><a class="btn btn-primary" id="sendBtn" asp-action="WriteMessage">Отправить</a></p>
 </div>
 
-@section Scripts{ 
+@section Scripts{
     <script>
         $(function () {
-        var userName = "testUser";
- 
-        var protocol = location.protocol === "https:" ? "wss:" : "ws:";
-        var wsUri = protocol + "//" + window.location.host;
-        var socket = new WebSocket(wsUri);
-        socket.onopen = e => {
-            console.log("socket opened", e);
-        };
- 
-        socket.onclose = function (e) {
-            console.log("socket closed", e);
-        };
- 
-        socket.onmessage = function (e) {
-            console.log(e);
-            $('#msgs').append(e.data + '<br />');
-        };
- 
-        socket.onerror = function (e) {
-            console.error(e.data);
-        };
- 
-        $('#MessageField').keypress(function (e) {
-            if (e.which != 13) {
-                return;
-            }
- 
-            e.preventDefault();
- 
-            var message = userName + ": " + $('#MessageField').val();
-            socket.send(message);
-            $('#MessageField').val('');
+            var userName = "testUser";
+
+            var protocol = location.protocol === "https:" ? "wss:" : "ws:";
+            var wsUri = protocol + "//" + window.location.host;
+            var socket = new WebSocket(wsUri);
+            socket.onopen = e => {
+                console.log("socket opened", e);
+            };
+
+            socket.onclose = function (e) {
+                console.log("socket closed", e);
+            };
+
+            socket.onmessage = function (e) {
+                console.log(e);
+                $('#msgs').append(e.data + '<br />');
+            };
+
+            socket.onerror = function (e) {
+                console.error(e.data);
+            };
+
+            /*$('#MessageField').keypress(function (e) {
+                if (e.which != 13) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                var jacksRank = $("#MessageField").data("firstname");
+                var message = jacksRank + ": " + $('#MessageField').val();
+                socket.send(message);
+                $('#MessageField').val('');
+            });*/
+            document.getElementById("sendBtn").addEventListener("click", function (e) {
+                e.preventDefault();
+                if ($('#MessageField').val().length != 0) {
+                    var jacksRank = $("#MessageField").data("firstname");
+                    var message = jacksRank + ": " + $('#MessageField').val();
+                    socket.send(message);
+                    $('#MessageField').val('');
+              
+                }
+                
+            });
         });
-    });
     </script>
 }
