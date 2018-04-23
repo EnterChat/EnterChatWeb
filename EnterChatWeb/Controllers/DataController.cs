@@ -22,15 +22,10 @@ namespace EnterChatWeb.Controllers
         private EnterChatContext _context;
         private IHostingEnvironment _appEnvironment;
 
-        //public DataController(EnterChatContext context, IHostingEnvironment hostingEnvironment)
-        //{
-        //    _context = context;
-        //    _appEnvironment = hostingEnvironment;
-        //}
-
-        public DataController(EnterChatContext context)
+        public DataController(EnterChatContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _appEnvironment = hostingEnvironment;
         }
 
         [Authorize]
