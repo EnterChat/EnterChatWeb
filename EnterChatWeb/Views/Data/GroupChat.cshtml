@@ -5,24 +5,19 @@
 </head>
 
 <h1>Групповой чат</h1>
-<!-- <div class="list-group" id="kek">
+
+
+<p id="msgs">
     @foreach (GroupChatMessage message in Model.GroupMessages)
     {
-        <div class="list-group-item">
-            <p>@message.UserPlusWorker.FirstName @message.UserPlusWorker.SecondName 
-            @message.UserPlusWorker.DepartmentName @message.UserPlusWorker.Email</p>
-            <p>@message.Text</p>
-            <p>@message.CreationDate</p>
-        </div>
+        <p>@message.UserPlusWorker.FirstName
+    @message.UserPlusWorker.SecondName: @message.Text @message.CreationDate</p>
     }
-</div> -->
-
-
-<p id="msgs"></p>
+</p>
 
 <div style="position:absolute;height:20px;bottom:10px;left:0; display:inline;width:100%">
     <input type="text" style="max-width:unset;width:100%;max-width:80%" id="MessageField"
-           placeholder="type message and press enter" data-firstname="@Model.FirstName"/>
+           placeholder="type message and press enter" data-name="@Model.FirstName @Model.SecondName"/>
     <p style="display:inline-block"><a class="btn btn-primary" id="sendBtn" asp-action="">Отправить</a></p>
 </div>
 
@@ -44,7 +39,8 @@
 
             socket.onmessage = function (e) {
                 console.log(e);
-                $('#msgs').append(e.data + '<br />');
+                var jacksRank = $("#MessageField").data("name");
+                $('#msgs').append('<p>' + jacksRank + ": " + e.data + '</p>');
             };
 
             socket.onerror = function (e) {
@@ -66,8 +62,8 @@
             document.getElementById("sendBtn").addEventListener("click", function (e) {
                 e.preventDefault();
                 if ($('#MessageField').val().length != 0) {
-                    var jacksRank = $("#MessageField").data("firstname");
-                    var message = jacksRank + ": " + $('#MessageField').val();
+                    //var jacksRank = $("#MessageField").data("firstname");
+                    var message = $('#MessageField').val();
                     socket.send(message);
                     $('#MessageField').val('');
               

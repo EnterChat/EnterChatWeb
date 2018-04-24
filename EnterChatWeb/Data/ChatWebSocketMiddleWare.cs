@@ -11,6 +11,7 @@ using EnterChatWeb.Controllers;
 using Microsoft.EntityFrameworkCore;
 using EnterChatWeb.Models;
 using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
 
 namespace EnterChatWeb.Data
 {
@@ -24,7 +25,7 @@ namespace EnterChatWeb.Data
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, EnterChatContext chatContext)
         {
             if (!context.WebSockets.IsWebSocketRequest)
             {
@@ -55,6 +56,18 @@ namespace EnterChatWeb.Data
 
                     continue;
                 }
+                int user_id = Int32.Parse(context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                int comp_id = Int32.Parse(context.User.FindFirst("CompanyID").Value);
+                GroupChatMessage message = new GroupChatMessage
+                {
+                        UserID = user_id,
+                        CompanyID = comp_id,
+                        Text = response,
+                        CreationDate = DateTime.Now
+                };
+                await chatContext.GroupChatMessages.AddAsync(message);
+                await chatContext.SaveChangesAsync();
+                
 
                 foreach (var socket in _sockets)
                 {
@@ -78,7 +91,7 @@ namespace EnterChatWeb.Data
 
             var buffer = Encoding.UTF8.GetBytes(data);
             var segment = new ArraySegment<byte>(buffer);
-            var optionsBuilder = new DbContextOptionsBuilder<EnterChatContext>();
+            /*var optionsBuilder = new DbContextOptionsBuilder<EnterChatContext>();
             optionsBuilder.UseSqlite("Server=(localdb)\\mssqllocaldb;Database=EnterChatWebDB;");
             using (var context = new EnterChatContext(optionsBuilder.Options))
             {
@@ -91,7 +104,7 @@ namespace EnterChatWeb.Data
                 };
                 context.GroupChatMessages.AddAsync(message);
                 context.SaveChangesAsync();
-            }
+            }*/
             return socket.SendAsync(segment, WebSocketMessageType.Text, true, ct);
         }
 
