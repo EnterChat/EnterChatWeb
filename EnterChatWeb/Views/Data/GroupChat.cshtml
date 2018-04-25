@@ -42,10 +42,14 @@
                 var now = new Date();
                 var month = now.getMonth() + 1;
                 var secs = now.getSeconds();
+                var mins = now.getMinutes();
+                var hours = now.getHours();
                 if (month < 10) month = '0' + month;
                 if (secs < 10) secs = '0' + secs;
+                if (mins < 10) mins = '0' + mins;
+                if (hours < 10) hours = '0' + hours;
                 var stringDate = now.getUTCDate() + '.' + month + '.' + now.getFullYear() +
-                    ' ' + now.getHours() + ':' + now.getMinutes() + ':' + secs;
+                    ' ' + hours + ':' + mins + ':' + secs;
                 var jacksRank = $("#MessageField").data("name");
                 $('#msgs').append('<p>' + jacksRank + ': ' + e.data + ' ' + stringDate + '</p>');
             };

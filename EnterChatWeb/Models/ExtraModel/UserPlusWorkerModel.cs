@@ -26,6 +26,14 @@ namespace EnterChatWeb.Models
             DepartmentName = d;
         }
 
+        public UserPlusWorkerModel(string f, string s, int? i, int id)
+        {
+            FirstName = f;
+            SecondName = s;
+            InviteCode = i;
+            ID = id;
+        }
+
         public UserPlusWorkerModel(string f, string s, int? i)
         {
             FirstName = f;

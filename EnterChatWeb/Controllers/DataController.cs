@@ -50,7 +50,7 @@ namespace EnterChatWeb.Controllers
                 {
                     foreach (Worker w in workers)
                     {
-                        UserPlusWorkerModel userPlusWorkerModel = new UserPlusWorkerModel(w.FirstName, w.SecondName, w.InviteCode);
+                        UserPlusWorkerModel userPlusWorkerModel = new UserPlusWorkerModel(w.FirstName, w.SecondName, w.InviteCode, w.ID);
                         User user = await _context.Users.Where(u => u.WorkerID == w.ID).FirstOrDefaultAsync();
                         if (user != null)
                         {
@@ -213,8 +213,8 @@ namespace EnterChatWeb.Controllers
             foreach (GroupChatMessage message in messages)
             {
                 User _user = await _context.Users.Where(u => u.ID == message.UserID).FirstOrDefaultAsync();
-                Worker _worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
-                Department _department = await _context.Departments.Where(d => d.ID == worker.DepartmentID)
+                Worker _worker = await _context.Workers.Where(w => w.ID == _user.WorkerID).FirstOrDefaultAsync();
+                Department _department = await _context.Departments.Where(d => d.ID == _worker.DepartmentID)
                     .FirstOrDefaultAsync();
                 UserPlusWorkerModel _model = new UserPlusWorkerModel(_worker.FirstName, _worker.SecondName,
                     _user.Email, _department.Title);

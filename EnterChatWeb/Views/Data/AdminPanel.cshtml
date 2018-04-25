@@ -50,9 +50,6 @@
                     else
                     {
                         <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@worker.ID">Изменить</a>
-                    }
-                    @if (worker.ID != int.Parse(User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value))
-                    {
                         <a asp-action="DeleteWorker" asp-controller="Data" asp-route-id="@worker.ID">Удалить</a>
                     }
                 </div>
