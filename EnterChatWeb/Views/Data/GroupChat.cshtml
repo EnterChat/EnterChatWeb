@@ -7,13 +7,13 @@
 <h1>Групповой чат</h1>
 
 
-<p id="msgs">
+<div id="msgs">
     @foreach (GroupChatMessage message in Model.GroupMessages)
     {
         <p>@message.UserPlusWorker.FirstName
     @message.UserPlusWorker.SecondName: @message.Text @message.CreationDate</p>
     }
-</p>
+</div>
 
 <div style="position:absolute;height:20px;bottom:10px;left:0; display:inline;width:100%">
     <input type="text" style="max-width:unset;width:100%;max-width:80%" id="MessageField"
@@ -41,9 +41,11 @@
                 console.log(e);
                 var now = new Date();
                 var month = now.getMonth() + 1;
+                var secs = now.getSeconds();
                 if (month < 10) month = '0' + month;
+                if (secs < 10) secs = '0' + secs;
                 var stringDate = now.getUTCDate() + '.' + month + '.' + now.getFullYear() +
-                    ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+                    ' ' + now.getHours() + ':' + now.getMinutes() + ':' + secs;
                 var jacksRank = $("#MessageField").data("name");
                 $('#msgs').append('<p>' + jacksRank + ': ' + e.data + ' ' + stringDate + '</p>');
             };
