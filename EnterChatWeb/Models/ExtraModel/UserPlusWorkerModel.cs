@@ -18,12 +18,11 @@ namespace EnterChatWeb.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? RegistrationDate { get; set; }
 
-        public UserPlusWorkerModel(string f, string s, string e, string d)
+        public UserPlusWorkerModel(string f, string s, string e)
         {
             FirstName = f;
             SecondName = s;
             Email = e;
-            DepartmentName = d;
         }
 
         public UserPlusWorkerModel(string f, string s, int? i, int id)

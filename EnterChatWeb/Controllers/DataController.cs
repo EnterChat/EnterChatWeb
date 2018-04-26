@@ -121,9 +121,8 @@ namespace EnterChatWeb.Controllers
             {
                 User user = await _context.Users.Where(w => w.ID == f.UserID).FirstOrDefaultAsync();
                 Worker worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
-                Department department = await _context.Departments.Where(d => d.ID == worker.DepartmentID).FirstOrDefaultAsync();
                 UserPlusWorkerModel model = new UserPlusWorkerModel(worker.FirstName, worker.SecondName,
-                    user.Email, department.Title);
+                    user.Email);
                 f.UserPlusWorker = model;
             }
             return View(files);
@@ -214,10 +213,8 @@ namespace EnterChatWeb.Controllers
             {
                 User _user = await _context.Users.Where(u => u.ID == message.UserID).FirstOrDefaultAsync();
                 Worker _worker = await _context.Workers.Where(w => w.ID == _user.WorkerID).FirstOrDefaultAsync();
-                Department _department = await _context.Departments.Where(d => d.ID == _worker.DepartmentID)
-                    .FirstOrDefaultAsync();
                 UserPlusWorkerModel _model = new UserPlusWorkerModel(_worker.FirstName, _worker.SecondName,
-                    _user.Email, _department.Title);
+                    _user.Email);
                 message.UserPlusWorker = _model;
             }
 
@@ -245,9 +242,8 @@ namespace EnterChatWeb.Controllers
             {
                 User user = await _context.Users.Where(w => w.ID == n.UserID).FirstOrDefaultAsync();
                 Worker worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
-                Department department = await _context.Departments.Where(d => d.ID == worker.DepartmentID).FirstOrDefaultAsync();
                 UserPlusWorkerModel model = new UserPlusWorkerModel(worker.FirstName, worker.SecondName,
-                    user.Email, department.Title);
+                    user.Email);
                 n.UserPlusWorker = model;
             }
             return View(notes);
@@ -460,6 +456,42 @@ namespace EnterChatWeb.Controllers
             }
             ModelState.AddModelError("", "Некорректные данные");
             return View(list);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> TopicChat(int? id)
+        {
+            if (id != null)
+            {
+                Topic topic = await _context.Topics.Where(t => t.ID == id).FirstOrDefaultAsync();
+                if (topic != null)
+                {
+                    int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+                    int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    User user = await _context.Users.Where(u => u.ID == user_id).FirstOrDefaultAsync();
+                    Worker worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
+                    TopicMessagePlusUser topicMessagePlusUser = new TopicMessagePlusUser
+                    {
+                        CompanyID = comp_id,
+                        UserID = user_id,
+                        TopicID = topic.ID,
+                        FirstName = worker.FirstName,
+                        SecondName = worker.SecondName
+                    };
+                    var TopicMessages = await _context.TopicMessages.Where(t => t.ID == topic.ID).ToListAsync();
+                    foreach (var topicmes in TopicMessages)
+                    {
+                        User _user = await _context.Users.Where(u => u.ID == topicmes.UserID).FirstOrDefaultAsync();
+                        Worker _worker = await _context.Workers.Where(w => w.ID == _user.WorkerID).FirstOrDefaultAsync();
+                        UserPlusWorkerModel userPlusWorkerModel = 
+                            new UserPlusWorkerModel(_worker.FirstName, _worker.SecondName, _user.Email);
+                        topicmes.UserPlusWorker = userPlusWorkerModel;
+                    }
+                    topicMessagePlusUser.TopicMessages = TopicMessages;
+                    return View(topicMessagePlusUser);
+                }
+            }
+            return NotFound();
         }
 
         [Authorize]
