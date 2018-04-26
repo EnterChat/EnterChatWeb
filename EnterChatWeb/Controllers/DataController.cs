@@ -476,9 +476,10 @@ namespace EnterChatWeb.Controllers
                         UserID = user_id,
                         TopicID = topic.ID,
                         FirstName = worker.FirstName,
-                        SecondName = worker.SecondName
+                        SecondName = worker.SecondName,
+                        TopicTitle = topic.Title
                     };
-                    var TopicMessages = await _context.TopicMessages.Where(t => t.ID == topic.ID).ToListAsync();
+                    var TopicMessages = await _context.TopicMessages.Where(t => t.TopicID == topic.ID).ToListAsync();
                     foreach (var topicmes in TopicMessages)
                     {
                         User _user = await _context.Users.Where(u => u.ID == topicmes.UserID).FirstOrDefaultAsync();

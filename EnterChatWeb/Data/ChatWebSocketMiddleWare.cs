@@ -1,5 +1,4 @@
-﻿using EnterChatWeb.Models.ExtraModel;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -7,10 +6,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using EnterChatWeb.Controllers;
-using Microsoft.EntityFrameworkCore;
 using EnterChatWeb.Models;
-using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 
 namespace EnterChatWeb.Data
@@ -58,16 +54,38 @@ namespace EnterChatWeb.Data
                 }
                 int user_id = Int32.Parse(context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 int comp_id = Int32.Parse(context.User.FindFirst("CompanyID").Value);
-                GroupChatMessage message = new GroupChatMessage
+
+                int index_stick = response.IndexOf('|');
+
+                string idRaw = response.Substring(0, index_stick);
+
+                string trueMessage = response.Remove(0, index_stick + 1);
+
+                if (idRaw.Equals("NoN"))
                 {
+                    GroupChatMessage message = new GroupChatMessage
+                    {
                         UserID = user_id,
                         CompanyID = comp_id,
-                        Text = response,
+                        Text = trueMessage,
                         CreationDate = DateTime.Now
-                };
-                await chatContext.GroupChatMessages.AddAsync(message);
-                await chatContext.SaveChangesAsync();
-                
+                    };
+                    await chatContext.GroupChatMessages.AddAsync(message);
+                    await chatContext.SaveChangesAsync();
+                }
+                else
+                {
+                    TopicMessage topicMessage = new TopicMessage
+                    {
+                        TopicID = Convert.ToInt32(idRaw),
+                        UserID = user_id,
+                        CompanyID = comp_id,
+                        Text = trueMessage,
+                        CreationDate = DateTime.Now
+                    };
+                    await chatContext.TopicMessages.AddAsync(topicMessage);
+                    await chatContext.SaveChangesAsync();
+                }
 
                 foreach (var socket in _sockets)
                 {
@@ -91,20 +109,6 @@ namespace EnterChatWeb.Data
 
             var buffer = Encoding.UTF8.GetBytes(data);
             var segment = new ArraySegment<byte>(buffer);
-            /*var optionsBuilder = new DbContextOptionsBuilder<EnterChatContext>();
-            optionsBuilder.UseSqlite("Server=(localdb)\\mssqllocaldb;Database=EnterChatWebDB;");
-            using (var context = new EnterChatContext(optionsBuilder.Options))
-            {
-                GroupChatMessage message = new GroupChatMessage
-                {
-                    UserID = 1,
-                    CompanyID = 1,
-                    Text = data,
-                    CreationDate = DateTime.Now
-                };
-                context.GroupChatMessages.AddAsync(message);
-                context.SaveChangesAsync();
-            }*/
             return socket.SendAsync(segment, WebSocketMessageType.Text, true, ct);
         }
 

@@ -73,8 +73,8 @@
             document.getElementById("sendBtn").addEventListener("click", function (e) {
                 e.preventDefault();
                 if ($('#MessageField').val().length != 0) {
-                    //var jacksRank = $("#MessageField").data("firstname");
-                    var message = $('#MessageField').val();
+                    var topicId = 'NoN'
+                    var message = topicId + '|' + $('#MessageField').val();
                     socket.send(message);
                     $('#MessageField').val('');
               

@@ -3,7 +3,7 @@
     <title>Пользовательский чат</title>
 </head>
 
-<h1>Здесь можно посмотреть сообщения выбранного чата</h1>
+<h1>Чат "@Model.TopicTitle"</h1>
 
 <div id="msgs">
     @foreach (TopicMessage message in Model.TopicMessages)
@@ -16,7 +16,7 @@
 </div>
 <div style="position:absolute;height:20px;bottom:10px;left:0; display:inline;width:100%">
     <input type="text" style="max-width:unset;width:100%;max-width:80%" id="MessageField"
-           placeholder="type message and press enter" data-name="@Model.FirstName @Model.SecondName" />
+           placeholder="type message and press enter" data-name="@Model.FirstName @Model.SecondName" data-id="@Model.TopicID"/>
     <p style="display:inline-block"><a class="btn btn-primary" id="sendBtn" asp-action="">Отправить</a></p>
 </div>
 
@@ -39,6 +39,7 @@
             socket.onmessage = function (e) {
                 console.log(e);
                 var now = new Date();
+
                 var month = now.getMonth() + 1;
                 var secs = now.getSeconds();
                 var mins = now.getMinutes();
@@ -47,9 +48,17 @@
                 if (secs < 10) secs = '0' + secs;
                 if (mins < 10) mins = '0' + mins;
                 if (hours < 10) hours = '0' + hours;
+
                 var stringDate = now.getUTCDate() + '.' + month + '.' + now.getFullYear() +
                     ' ' + hours + ':' + mins + ':' + secs;
                 var jacksRank = $("#MessageField").data("name");
+
+                /*var string = e.data;
+
+                var index = string.index
+                var header = e.data.substring(0, index + 1);
+                var trueMessage = e.data.replace(header, '');*/
+
                 $('#msgs').append('<p>' + jacksRank + ': ' + e.data + ' ' + stringDate + '</p>');
             };
 
@@ -72,8 +81,8 @@
             document.getElementById("sendBtn").addEventListener("click", function (e) {
                 e.preventDefault();
                 if ($('#MessageField').val().length != 0) {
-                    //var jacksRank = $("#MessageField").data("firstname");
-                    var message = $('#MessageField').val();
+                    var topicId = $("#MessageField").data("id");
+                    var message = topicId + '|' + $('#MessageField').val();
                     socket.send(message);
                     $('#MessageField').val('');
 
