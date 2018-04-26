@@ -1,7 +1,24 @@
-﻿<head>
+﻿@model IEnumerable<EnterChatWeb.Models.Topic>
+<head>
     <title>Обсуждения</title>
 </head>
 
-<h1>Обсуждения компании</h1>
+<h1>Обсуждения компании <a class="btn btn-primary" asp-action="AddTopic" asp-controller="Data">Создать чат</a></h1>
 
-<a class="btn btn-primary" asp-action="AddTopic" asp-controller="Data">Создать чат</a>
+
+<div class="list-group">
+    @foreach (Topic topic in Model)
+    {
+        <div class="list-group-item col-md-12">
+            <h4><a asp-action="TopicChat" asp-controller="Data" asp-route-id="@topic.ID">@topic.Title</a></h4>
+            <div style="display:inline">
+                <p style="display:inline-block">Участники: </p>
+                @foreach(var member in topic.WorkerChatMembers){
+                    <p style="display:inline-block">[@member.FullName] </p>
+                }
+            </div>
+            
+            <p>Создан: @topic.CreationDate</p>
+        </div>
+    }
+</div>

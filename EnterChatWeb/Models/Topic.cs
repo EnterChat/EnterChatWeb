@@ -1,6 +1,8 @@
-﻿using System;
+﻿using EnterChatWeb.Models.ExtraModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +19,8 @@ namespace EnterChatWeb.Models
         public string Title { get; set; }
 
         public ICollection<TopicMessage> TopicMessages { get; set; }
-
+        [NotMapped]
+        public ICollection<WorkerChatMember> WorkerChatMembers { get; set; }
         public Company Company { get; set; }
         public User User { get; set; }
     }

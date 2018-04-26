@@ -343,12 +343,39 @@ namespace EnterChatWeb.Controllers
             return NotFound();
         }
 
-
-
         [Authorize]
-        public IActionResult Topics()
+        public async Task<IActionResult> Topics()
         {
-            return View();
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+            int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            User user = await _context.Users.Where(u => u.ID == user_id).FirstOrDefaultAsync();
+            int? w_ID = user.WorkerID;
+            List<Topic> topics = new List<Topic>();
+            var chatmemberships = await _context.ChatMembers.Where(c => c.WorkerID == w_ID).ToListAsync();
+
+            List<WorkerChatMember> workerChatMembers = new List<WorkerChatMember>();
+
+            foreach (ChatMember ch in chatmemberships)
+            {
+                Topic topic = await _context.Topics.Where(t => t.ID == ch.TopicID).FirstOrDefaultAsync();
+                var dischatmembers = await _context.ChatMembers.Where(c => c.TopicID == topic.ID).ToListAsync();
+                foreach (ChatMember dch in dischatmembers)
+                {
+                    Worker worker = await _context.Workers.Where(w => w.ID == dch.WorkerID).FirstOrDefaultAsync();
+                    if (worker != null)
+                    {
+                        WorkerChatMember dischatMember = new WorkerChatMember
+                        {
+                            FullName = worker.FirstName + " " + worker.SecondName
+                        };
+                        workerChatMembers.Add(dischatMember);
+                    }
+                }
+                topic.WorkerChatMembers = workerChatMembers;
+                if (topics != null) topics.Add(topic);
+            }
+            return View(topics);
         }
 
         [Authorize]
@@ -390,6 +417,8 @@ namespace EnterChatWeb.Controllers
             {
                 int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
                 int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                User user = await _context.Users.Where(u => u.ID == user_id).FirstOrDefaultAsync();
+                int? w_ID = user.WorkerID;
 
                 Topic topic = new Topic
                 {
@@ -403,8 +432,16 @@ namespace EnterChatWeb.Controllers
                 await _context.SaveChangesAsync();
 
                 List<ChatMember> chatMembers = new List<ChatMember>();
+                ChatMember chAdmin = new ChatMember
+                {
+                    WorkerID = w_ID,
+                    TopicID = topic.ID
+                };
 
-                foreach(WorkerChatMember member in list.WorkerChatMembers){
+                await _context.ChatMembers.AddAsync(chAdmin);
+                await _context.SaveChangesAsync();
+
+                foreach (WorkerChatMember member in list.WorkerChatMembers){
                     if (member.IsAdded == true)
                     {
                         ChatMember chmember = new ChatMember
