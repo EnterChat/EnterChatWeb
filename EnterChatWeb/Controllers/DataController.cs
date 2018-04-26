@@ -352,6 +352,80 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> AddTopic()
+        {
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+            int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var user = await _context.Users.Where(u => u.ID == user_id).FirstOrDefaultAsync();
+            int? w_id = user.WorkerID;
+            var workers = await _context.Workers.Where(w => w.CompanyID == comp_id).ToListAsync();
+            List<WorkerChatMember> workerChatMembers = new List<WorkerChatMember>();
+            foreach (Worker worker in workers)
+            {
+                if (worker.ID != w_id)
+                {
+                    WorkerChatMember member = new WorkerChatMember
+                    {
+                        FullName = worker.FirstName + " " + worker.SecondName,
+                        ID = worker.ID,
+                        IsAdded = false
+                    };
+                    workerChatMembers.Add(member);
+                }
+            }
+
+            TopicPlusWorkersList topicPlusWorkersList = new TopicPlusWorkersList
+            {
+                WorkerChatMembers = workerChatMembers
+            };
+
+            return View(topicPlusWorkersList);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddTopic(TopicPlusWorkersList list)
+        {
+            if (ModelState.IsValid)
+            {
+                int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+                int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                Topic topic = new Topic
+                {
+                    UserID = user_id,
+                    CompanyID = comp_id,
+                    Title = list.Title,
+                    CreationDate = DateTime.Now
+                };
+
+                await _context.Topics.AddAsync(topic);
+                await _context.SaveChangesAsync();
+
+                List<ChatMember> chatMembers = new List<ChatMember>();
+
+                foreach(WorkerChatMember member in list.WorkerChatMembers){
+                    if (member.IsAdded == true)
+                    {
+                        ChatMember chmember = new ChatMember
+                        {
+                            WorkerID = member.ID,
+                            TopicID = topic.ID
+                        };
+                        chatMembers.Add(chmember);
+                    }
+                }
+
+                await _context.ChatMembers.AddRangeAsync(chatMembers);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Topics");
+            }
+            ModelState.AddModelError("", "Некорректные данные");
+            return View(list);
+        }
+
+        [Authorize]
         public async Task<IActionResult> Workers()
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);

@@ -23,6 +23,7 @@ namespace EnterChatWeb.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<ChatMember> ChatMembers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,7 +37,7 @@ namespace EnterChatWeb.Data
             modelBuilder.Entity<Company>().ToTable("Company");
             modelBuilder.Entity<Worker>().ToTable("Worker");
             modelBuilder.Entity<Department>().ToTable("Departments");
-
+            modelBuilder.Entity<ChatMember>().ToTable("ChatMembers");
 
             base.OnModelCreating(modelBuilder);
         }
