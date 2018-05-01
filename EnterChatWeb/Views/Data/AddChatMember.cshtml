@@ -1,11 +1,11 @@
 ﻿@model EnterChatWeb.Models.ExtraModel.EditChatMemberExtraModel
-@{ 
+@{
     Layout = null;
 }
 
-<h4>Удаление сотрудника из чата "@Model.Title"</h4>
+<h4>Добавление сотрудника в чат "@Model.Title"</h4>
 
-<form asp-action="DeleteChatMember" method="post" asp-controller="Data">
+<form asp-action="AddChatMember" method="post" asp-controller="Data">
     <div asp-validation-summary="All"></div>
     <div>
         <select asp-for="ID" class="form-control">
@@ -17,6 +17,6 @@
     </div>
     <input asp-for="@Model.TopicID" type="hidden" />
     <div class="form-group">
-        <input type="submit" value="Удалить из чата" class="btn btn-default" />
+        <input type="submit" value="Добавить в чат" class="btn btn-default" />
     </div>
 </form>

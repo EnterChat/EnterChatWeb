@@ -9,6 +9,7 @@ namespace EnterChatWeb.Models.ExtraModel
     {
         public int? ID { get; set; }
         public string Title { get; set; }
+        public int? TopicID { get; set; }
         public IEnumerable<WorkerChatMember> WorkerChatMembers { get; set; }
     }
 }

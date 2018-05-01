@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<EnterChatWeb.Models.Topic>
+@using System.Security.Claims
 <head>
     <title>Обсуждения</title>
 </head>
@@ -13,16 +14,24 @@
             <h4><a asp-action="TopicChat" asp-controller="Data" asp-route-id="@topic.ID">@topic.Title</a></h4>
             <div style="display:inline">
                 <p style="display:inline-block">Участники: </p>
-                @foreach(var member in topic.WorkerChatMembers){
+                @foreach (var member in topic.WorkerChatMembers)
+                {
                     <p style="display:inline-block">[@member.FullName] </p>
                 }
             </div>
-            
+
             <p>Создан: @topic.CreationDate</p>
-            <a asp-action="EditTopicTitle" asp-controller="Data" asp-route-id="@topic.ID">Изменить название</a>
-            <a asp-action="DeleteTopic" asp-controller="Data" asp-route-id="@topic.ID">Удалить чат</a>
-            <a asp-action="DeleteChatMember" asp-controller="Data" asp-route-id="@topic.ID">Удалить участника</a>
-            <a asp-action="AddChatMember" asp-controller="Data" asp-route-id="@topic.ID">Добавить участника</a>
+            @if (Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value) == topic.UserID)
+            {
+                <a asp-action="EditTopicTitle" asp-controller="Data" asp-route-id="@topic.ID">Изменить название</a>
+                <a asp-action="DeleteTopic" asp-controller="Data" asp-route-id="@topic.ID">Удалить чат</a>
+                <a asp-action="DeleteChatMember" asp-controller="Data" asp-route-id="@topic.ID">Удалить участника</a>
+                <a asp-action="AddChatMember" asp-controller="Data" asp-route-id="@topic.ID">Добавить участника</a>
+            }
+            else
+            {
+                <a asp-action="LeaveTopicChat" asp-controller="Data" asp-route-id="@topic.ID">Покинуть чат</a>
+            }
         </div>
     }
 </div>

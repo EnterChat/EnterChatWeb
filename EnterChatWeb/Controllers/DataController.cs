@@ -532,6 +532,7 @@ namespace EnterChatWeb.Controllers
                     }
                 }
                 model.Title = topic.Title;
+                model.TopicID = topic.ID;
                 model.WorkerChatMembers = listMembers;
                 return View(model);
             }
@@ -540,17 +541,73 @@ namespace EnterChatWeb.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> DeleteChatMember(EditChatMemberExtraModel model)
+        public async Task<IActionResult> DeleteChatMember(EditChatMemberExtraModel model) //неправильно
         {
             if (ModelState.IsValid)
             {
-                ChatMember member = await _context.ChatMembers.Where(ch => ch.WorkerID == model.ID).FirstOrDefaultAsync();
+                ChatMember member = await _context.ChatMembers.Where(ch => ch.WorkerID == model.ID &&
+                ch.TopicID == model.TopicID).FirstOrDefaultAsync();
                 if(member != null)
                 {
                     _context.ChatMembers.Remove(member);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Topics");
                 }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> AddChatMember(int? id)
+        {
+            if (id != null)
+            {
+                int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+                EditChatMemberExtraModel model = new EditChatMemberExtraModel();
+                List<WorkerChatMember> listMembers = new List<WorkerChatMember>();
+                Topic topic = await _context.Topics.Where(t => t.ID == id).FirstOrDefaultAsync();
+
+                var chatmembers = await _context.ChatMembers.Where(ch => ch.TopicID == id).ToListAsync();
+
+                var workers = await _context.Workers.Where(w => w.CompanyID == comp_id).ToListAsync();
+
+                foreach (Worker worker in workers)
+                {
+                    ChatMember member = chatmembers.Find(w => w.WorkerID == worker.ID);
+                    if (member == null)
+                    {
+                        WorkerChatMember wmember = new WorkerChatMember
+                        {
+                            FullName = worker.FirstName + " " + worker.SecondName,
+                            ID = worker.ID
+                        };
+                        listMembers.Add(wmember);
+                    }
+                }
+
+                model.Title = topic.Title;
+                model.TopicID = topic.ID;
+                model.WorkerChatMembers = listMembers;
+                return View(model);
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddChatMember(EditChatMemberExtraModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ChatMember member = new ChatMember()
+                {
+                    WorkerID = model.ID,
+                    TopicID = model.TopicID
+                };
+
+                await _context.ChatMembers.AddAsync(member);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Topics");
             }
             return NotFound();
         }
