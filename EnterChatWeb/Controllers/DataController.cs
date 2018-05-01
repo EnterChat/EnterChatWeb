@@ -677,6 +677,43 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
+        [ActionName("LeaveTopicChat")]
+        public async Task<IActionResult> ConfirmLeaveTopicChat(int? id)
+        {
+            if (id != null)
+            {
+                Topic topic = await _context.Topics.Where(t => t.ID == id).FirstOrDefaultAsync();
+                if (topic != null) return View(topic);
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> LeaveTopicChat(int? id)
+        {
+            if (id != null)
+            {
+                int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                User user = await _context.Users.Where(u => u.ID == user_id).FirstOrDefaultAsync();
+                Worker worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
+                ChatMember member = await _context.ChatMembers.Where(ch => ch.TopicID == id &&
+                ch.WorkerID == worker.ID).FirstOrDefaultAsync();
+                if (member != null)
+                {
+                    _context.ChatMembers.Remove(member);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Topics");
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
         public async Task<IActionResult> TopicChat(int? id)
         {
             if (id != null)
