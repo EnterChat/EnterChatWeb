@@ -510,6 +510,52 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> DeleteChatMember(int? id)
+        {
+            if (id != null)
+            {
+                EditChatMemberExtraModel model = new EditChatMemberExtraModel();
+                List<WorkerChatMember> listMembers = new List<WorkerChatMember>();
+                Topic topic = await _context.Topics.Where(t => t.ID == id).FirstOrDefaultAsync();
+                var chatmembers = await _context.ChatMembers.Where(ch => ch.TopicID == id).ToListAsync();
+                foreach (ChatMember mem in chatmembers)
+                {
+                    Worker worker = await _context.Workers.Where(w => w.ID == mem.WorkerID).FirstOrDefaultAsync();
+                    if(worker != null)
+                    {
+                        WorkerChatMember member = new WorkerChatMember
+                        {
+                            FullName = worker.FirstName + " " + worker.SecondName,
+                            ID = worker.ID
+                        };
+                        listMembers.Add(member);
+                    }
+                }
+                model.Title = topic.Title;
+                model.WorkerChatMembers = listMembers;
+                return View(model);
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteChatMember(EditChatMemberExtraModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ChatMember member = await _context.ChatMembers.Where(ch => ch.WorkerID == model.ID).FirstOrDefaultAsync();
+                if(member != null)
+                {
+                    _context.ChatMembers.Remove(member);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Topics");
+                }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
         public async Task<IActionResult> EditTopicTitle(int? id)
         {
             if (id != null)
