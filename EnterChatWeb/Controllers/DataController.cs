@@ -511,6 +511,38 @@ namespace EnterChatWeb.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> EditTopicTitle(int? id)
+        {
+            if (id != null)
+            {
+                Topic topic = await _context.Topics.Where(t => t.ID == id).FirstOrDefaultAsync();
+                if (topic != null)
+                {
+                    return View(topic);
+                }
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditTopicTitle(Topic topic)
+        {
+            if (ModelState.IsValid)
+            {
+                var topic_db = await _context.Topics.Where(t => t.ID == topic.ID).FirstOrDefaultAsync();
+                if (topic_db != null) topic_db.Title = topic.Title;
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Topics");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Некорректные данные");
+            }
+            return View(topic);
+        }
+
+        [Authorize]
         public async Task<IActionResult> TopicChat(int? id)
         {
             if (id != null)

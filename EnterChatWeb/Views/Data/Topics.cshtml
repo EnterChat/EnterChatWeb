@@ -19,6 +19,10 @@
             </div>
             
             <p>Создан: @topic.CreationDate</p>
+            <a asp-action="EditTopicTitle" asp-controller="Data" asp-route-id="@topic.ID">Изменить название</a>
+            <a asp-action="DeleteTopic" asp-controller="Data" asp-route-id="@topic.ID">Удалить чат</a>
+            <a asp-action="DeleteChatMember" asp-controller="Data" asp-route-id="@topic.ID">Удалить участника</a>
+            <a asp-action="AddChatMember" asp-controller="Data" asp-route-id="@topic.ID">Добавить участника</a>
         </div>
     }
 </div>
