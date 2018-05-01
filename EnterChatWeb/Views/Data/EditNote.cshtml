@@ -1,4 +1,4 @@
-﻿@model EnterChatWeb.Models.Note
+﻿@model EnterChatWeb.Models.ExtraModel.NotePlusCategoriesList
 
 @{
     Layout = null;
@@ -13,6 +13,14 @@
     <div class="form-group">
         <label asp-for="Text" class="control-label">Текст заметки</label>
         <textarea rows="5" asp-for="Text" class="form-control"></textarea>
+    </div>
+    <div>
+        <select asp-for="NoteCategoryID" class="form-control">
+            @foreach (var cat in Model.NoteCategories)
+            {
+                <option value="@cat.ID">@cat.Title</option>
+            }
+        </select>
     </div>
     <div class="form-group">
         <input type="submit" value="Сохранить" class="btn btn-default" />

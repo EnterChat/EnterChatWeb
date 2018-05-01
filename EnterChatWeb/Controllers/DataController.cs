@@ -319,12 +319,21 @@ namespace EnterChatWeb.Controllers
         [Authorize]
         public async Task<IActionResult> EditNote(int? id)
         {
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
             if (id != null)
             {
                 Note note = await _context.Notes.FirstOrDefaultAsync(n => n.ID == id);
                 if (note != null)
                 {
-                    return View(note);
+                    var noteCategories = await _context.NoteCategories.Where(n => n.CompanyID == comp_id).ToListAsync();
+                    NotePlusCategoriesList notePlus = new NotePlusCategoriesList
+                    {
+                        Text = note.Text,
+                        Title = note.Title,
+                        ID = note.ID
+                    };
+                    notePlus.NoteCategories = noteCategories;
+                    return View(notePlus);
                 }
             }
             return NotFound();
@@ -332,7 +341,7 @@ namespace EnterChatWeb.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> EditNote(Note note)
+        public async Task<IActionResult> EditNote(NotePlusCategoriesList note)
         {
             if (ModelState.IsValid)
             {
@@ -341,6 +350,7 @@ namespace EnterChatWeb.Controllers
                 {
                     db_note.Title = note.Title;
                     db_note.Text = note.Text;
+                    db_note.NoteCategoryID = note.NoteCategoryID;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Notes");
                 }
