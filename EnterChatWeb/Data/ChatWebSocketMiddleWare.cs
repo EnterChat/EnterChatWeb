@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnterChatWeb.Models;
 using System.Security.Claims;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace EnterChatWeb.Data
 {
@@ -54,7 +56,8 @@ namespace EnterChatWeb.Data
                 }
                 int user_id = Int32.Parse(context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 int comp_id = Int32.Parse(context.User.FindFirst("CompanyID").Value);
-
+                User user = await chatContext.Users.Where(u => u.ID == user_id).FirstOrDefaultAsync();
+                Worker worker = await chatContext.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
                 int index_stick = response.IndexOf('|');
 
                 string idRaw = response.Substring(0, index_stick);
@@ -87,6 +90,8 @@ namespace EnterChatWeb.Data
                     await chatContext.SaveChangesAsync();
                 }
 
+                string responceMessage = worker.FirstName + " " + worker.SecondName + ": " + trueMessage;
+
                 foreach (var socket in _sockets)
                 {
                     if (socket.Value.State != WebSocketState.Open)
@@ -94,7 +99,7 @@ namespace EnterChatWeb.Data
                         continue;
                     }
 
-                    await SendStringAsync(socket.Value, response, ct);
+                    await SendStringAsync(socket.Value, responceMessage, ct);
                 }
             }
             WebSocket dummy;

@@ -17,7 +17,7 @@
 
 <div style="position:absolute;height:20px;bottom:10px;left:0; display:inline;width:100%">
     <input type="text" style="max-width:unset;width:100%;max-width:80%" id="MessageField"
-           placeholder="type message and press enter" data-name="@Model.FirstName @Model.SecondName"/>
+           placeholder="type message and press enter"/>
     <p style="display:inline-block"><a class="btn btn-primary" id="sendBtn" asp-action="">Отправить</a></p>
 </div>
 
@@ -50,14 +50,7 @@
                 if (hours < 10) hours = '0' + hours;
                 var stringDate = now.getUTCDate() + '.' + month + '.' + now.getFullYear() +
                     ' ' + hours + ':' + mins + ':' + secs;
-                var jacksRank = $("#MessageField").data("name");
-
-                var string = new String(e.data);
-                var index = string.indexOf('|');
-                var header = string.substring(0, index + 1);
-                var trueMessage = string.replace(header, '');
-
-                $('#msgs').append('<p>' + jacksRank + ': ' + trueMessage + ' ' + stringDate + '</p>');
+                $('#msgs').append('<p>' + e.data + ' ' + stringDate + '</p>');
             };
 
             socket.onerror = function (e) {
