@@ -402,12 +402,11 @@ namespace EnterChatWeb.Controllers
             List<Topic> topics = new List<Topic>();
             var chatmemberships = await _context.ChatMembers.Where(c => c.WorkerID == w_ID).ToListAsync();
 
-            List<WorkerChatMember> workerChatMembers = new List<WorkerChatMember>();
-
             foreach (ChatMember ch in chatmemberships)
             {
                 Topic topic = await _context.Topics.Where(t => t.ID == ch.TopicID).FirstOrDefaultAsync();
                 var dischatmembers = await _context.ChatMembers.Where(c => c.TopicID == topic.ID).ToListAsync();
+                List<WorkerChatMember> workerChatMembers = new List<WorkerChatMember>();
                 foreach (ChatMember dch in dischatmembers)
                 {
                     Worker worker = await _context.Workers.Where(w => w.ID == dch.WorkerID).FirstOrDefaultAsync();
@@ -540,6 +539,38 @@ namespace EnterChatWeb.Controllers
                 ModelState.AddModelError("", "Некорректные данные");
             }
             return View(topic);
+        }
+
+        [Authorize]
+        [ActionName("DeleteTopic")]
+        public async Task<IActionResult> ConfirmDeleteTopic(int? id)
+        {
+            if (id != null)
+            {
+                Topic topic = await _context.Topics.Where(t => t.ID == id).FirstOrDefaultAsync();
+                if (topic != null) return View(topic);
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteTopic(int? id)
+        {
+            if (id != null)
+            {
+                Topic topic = await _context.Topics.Where(t => t.ID == id).FirstOrDefaultAsync();
+                var topicMessages = await _context.TopicMessages.Where(tm => tm.TopicID == id).ToListAsync();
+                var chatMembers = await _context.ChatMembers.Where(ch => ch.TopicID == id).ToListAsync();
+                if (topic != null && topicMessages != null && chatMembers != null) {
+                    _context.Topics.Remove(topic);
+                    _context.TopicMessages.RemoveRange(topicMessages);
+                    _context.ChatMembers.RemoveRange(chatMembers);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Topics");
+                }
+            }
+            return NotFound();
         }
 
         [Authorize]
