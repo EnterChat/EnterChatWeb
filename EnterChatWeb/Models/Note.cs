@@ -12,6 +12,7 @@ namespace EnterChatWeb.Models
         public int ID { get; set; }
         public int? UserID { get; set; }
         public int? CompanyID { get; set; }
+        public int? NoteCategoryID { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreationDate { get; set; }
@@ -24,5 +25,6 @@ namespace EnterChatWeb.Models
         [NotMapped]
         public UserPlusWorkerModel UserPlusWorker { get; set; }
         public Company Company { get; set; }
+        public NoteCategory NoteCategory { get; set; }
     }
 }

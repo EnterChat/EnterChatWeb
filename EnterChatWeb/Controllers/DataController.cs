@@ -237,41 +237,83 @@ namespace EnterChatWeb.Controllers
         public async Task<IActionResult> Notes()
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
-            var notes = await _context.Notes.Where(n => n.CompanyID == comp_id).ToListAsync();
-            foreach (Note n in notes)
+            var noteCategories = await _context.NoteCategories.Where(nc => nc.CompanyID == comp_id).ToListAsync();
+            foreach (NoteCategory noteCategory in noteCategories)
             {
-                User user = await _context.Users.Where(w => w.ID == n.UserID).FirstOrDefaultAsync();
-                Worker worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
-                UserPlusWorkerModel model = new UserPlusWorkerModel(worker.FirstName, worker.SecondName,
-                    user.Email);
-                n.UserPlusWorker = model;
+                var notes = await _context.Notes.Where(n => n.NoteCategoryID == noteCategory.ID).ToListAsync();
+                foreach (Note note in notes)
+                {
+                    User user = await _context.Users.Where(w => w.ID == note.UserID).FirstOrDefaultAsync();
+                    Worker worker = await _context.Workers.Where(w => w.ID == user.WorkerID).FirstOrDefaultAsync();
+                    UserPlusWorkerModel model = new UserPlusWorkerModel(worker.FirstName, worker.SecondName,
+                        user.Email);
+                    note.UserPlusWorker = model;
+                }
+                noteCategory.Notes = notes;
             }
-            return View(notes);
+            return View(noteCategories);
         }
 
         [Authorize]
-        public IActionResult AddNote()
+        public IActionResult AddNoteCategory()
         {
             return View();
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddNote(Note note)
+        public async Task<IActionResult> AddNoteCategory(NoteCategory noteCategory)
+        {
+            if (ModelState.IsValid)
+            {
+                int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+                NoteCategory noteCategoryDB = new NoteCategory
+                {
+                    CompanyID = comp_id,
+                    Title = noteCategory.Title
+                };
+                await _context.AddAsync(noteCategoryDB);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Notes");
+            }
+            ModelState.AddModelError("", "Некорректные данные");
+            return View(noteCategory);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> AddNote()
+        {
+            int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
+            var noteCategories = await _context.NoteCategories.Where(n => n.CompanyID == comp_id).ToListAsync();
+            NotePlusCategoriesList notePlusCategories = new NotePlusCategoriesList();
+            notePlusCategories.NoteCategories = noteCategories;
+            return View(notePlusCategories);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddNote(NotePlusCategoriesList noteplusList)
         {
             if (ModelState.IsValid)
             {
                 int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
                 int user_id = Int32.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                note.CompanyID = comp_id;
-                note.UserID = user_id;
-                note.CreationDate = DateTime.Now;
+                Note note = new Note
+                {
+                    CompanyID = comp_id,
+                    UserID = user_id,
+                    CreationDate = DateTime.Now,
+                    NoteCategoryID = noteplusList.NoteCategoryID,
+                    Title = noteplusList.Title,
+                    Text = noteplusList.Text
+                };
+                
                 _context.Notes.Add(note);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Notes");
             }
             ModelState.AddModelError("", "Некорректные данные");
-            return View(note);
+            return View(noteplusList);
         }
 
         [Authorize]

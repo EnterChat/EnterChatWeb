@@ -18,6 +18,7 @@ namespace EnterChatWeb.Data
         public DbSet<TopicMessage> TopicMessages { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<NoteCategory> NoteCategories { get; set; }
         public DbSet<GroupChatMessage> GroupChatMessages { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Company> Companies { get; set; }
@@ -32,6 +33,7 @@ namespace EnterChatWeb.Data
             modelBuilder.Entity<TopicMessage>().ToTable("TopicMessage");
             modelBuilder.Entity<Topic>().ToTable("Topic");
             modelBuilder.Entity<Note>().ToTable("Note");
+            modelBuilder.Entity<NoteCategory>().ToTable("NoteCategory");
             modelBuilder.Entity<GroupChatMessage>().ToTable("GroupChatMessage");
             modelBuilder.Entity<File>().ToTable("File");
             modelBuilder.Entity<Company>().ToTable("Company");

@@ -1,0 +1,16 @@
+﻿@model EnterChatWeb.Models.NoteCategory
+
+@{ 
+    Layout = null;
+}
+
+<form asp-action="AddNoteCategory" method="post" asp-controller="Data">
+    <div asp-validation-summary="All"></div>
+    <div class="form-group">
+        <label asp-for="Title" class="control-label">Название</label>
+        <input type="text" asp-for="Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Добавить" class="btn btn-default" />
+    </div>
+</form>
