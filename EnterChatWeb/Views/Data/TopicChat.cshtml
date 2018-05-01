@@ -53,13 +53,12 @@
                     ' ' + hours + ':' + mins + ':' + secs;
                 var jacksRank = $("#MessageField").data("name");
 
-                /*var string = e.data;
+                var string = new String(e.data);
+                var index = string.indexOf('|');
+                var header = string.substring(0, index + 1);
+                var trueMessage = string.replace(header, '');
 
-                var index = string.index
-                var header = e.data.substring(0, index + 1);
-                var trueMessage = e.data.replace(header, '');*/
-
-                $('#msgs').append('<p>' + jacksRank + ': ' + e.data + ' ' + stringDate + '</p>');
+                $('#msgs').append('<p>' + jacksRank + ': ' + trueMessage + ' ' + stringDate + '</p>');
             };
 
             socket.onerror = function (e) {

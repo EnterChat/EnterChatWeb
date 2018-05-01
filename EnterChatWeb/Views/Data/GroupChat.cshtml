@@ -51,7 +51,13 @@
                 var stringDate = now.getUTCDate() + '.' + month + '.' + now.getFullYear() +
                     ' ' + hours + ':' + mins + ':' + secs;
                 var jacksRank = $("#MessageField").data("name");
-                $('#msgs').append('<p>' + jacksRank + ': ' + e.data + ' ' + stringDate + '</p>');
+
+                var string = new String(e.data);
+                var index = string.indexOf('|');
+                var header = string.substring(0, index + 1);
+                var trueMessage = string.replace(header, '');
+
+                $('#msgs').append('<p>' + jacksRank + ': ' + trueMessage + ' ' + stringDate + '</p>');
             };
 
             socket.onerror = function (e) {
