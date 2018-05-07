@@ -12,6 +12,7 @@ namespace EnterChatWeb.Models
         public int ID { get; set; }
         public int? CompanyID { get; set; }
         [Required(ErrorMessage = "Пожалуйста, введите название отдела!")]
+        [StringLength(20, ErrorMessage = "Название отдела не может быть больше 20 символов!")]
         public string Title { get; set; }
         public bool Status { get; set; }
         public string StringStatus
