@@ -10,14 +10,28 @@ namespace EnterChatWeb.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ChatMembers",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TopicID = table.Column<int>(type: "int", nullable: true),
+                    WorkerID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMembers", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Company",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WorkEmail = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkEmail = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,6 +53,71 @@ namespace EnterChatWeb.Migrations
                     table.PrimaryKey("PK_Departments", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Departments_Company_CompanyID",
+                        column: x => x.CompanyID,
+                        principalTable: "Company",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "File",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyID = table.Column<int>(type: "int", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_File", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_File_Company_CompanyID",
+                        column: x => x.CompanyID,
+                        principalTable: "Company",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroupChatMessage",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyID = table.Column<int>(type: "int", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupChatMessage", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_GroupChatMessage_Company_CompanyID",
+                        column: x => x.CompanyID,
+                        principalTable: "Company",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NoteCategory",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyID = table.Column<int>(type: "int", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NoteCategory", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_NoteCategory_Company_CompanyID",
                         column: x => x.CompanyID,
                         principalTable: "Company",
                         principalColumn: "ID",
@@ -75,6 +154,36 @@ namespace EnterChatWeb.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Note",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyID = table.Column<int>(type: "int", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NoteCategoryID = table.Column<int>(type: "int", nullable: true),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Note", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Note_Company_CompanyID",
+                        column: x => x.CompanyID,
+                        principalTable: "Company",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Note_NoteCategory_NoteCategoryID",
+                        column: x => x.NoteCategoryID,
+                        principalTable: "NoteCategory",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -85,6 +194,7 @@ namespace EnterChatWeb.Migrations
                     Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Salt = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WorkerID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -100,92 +210,6 @@ namespace EnterChatWeb.Migrations
                         name: "FK_User_Worker_WorkerID",
                         column: x => x.WorkerID,
                         principalTable: "Worker",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "File",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyID = table.Column<int>(type: "int", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Link = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_File", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_File_Company_CompanyID",
-                        column: x => x.CompanyID,
-                        principalTable: "Company",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_File_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GroupChatMessage",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyID = table.Column<int>(type: "int", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GroupChatMessage", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_GroupChatMessage_Company_CompanyID",
-                        column: x => x.CompanyID,
-                        principalTable: "Company",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GroupChatMessage_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Note",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyID = table.Column<int>(type: "int", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Note", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Note_Company_CompanyID",
-                        column: x => x.CompanyID,
-                        principalTable: "Company",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Note_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -245,12 +269,6 @@ namespace EnterChatWeb.Migrations
                         principalTable: "Topic",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TopicMessage_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -264,19 +282,9 @@ namespace EnterChatWeb.Migrations
                 column: "CompanyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_File_UserID",
-                table: "File",
-                column: "UserID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_GroupChatMessage_CompanyID",
                 table: "GroupChatMessage",
                 column: "CompanyID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GroupChatMessage_UserID",
-                table: "GroupChatMessage",
-                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Note_CompanyID",
@@ -284,9 +292,14 @@ namespace EnterChatWeb.Migrations
                 column: "CompanyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Note_UserID",
+                name: "IX_Note_NoteCategoryID",
                 table: "Note",
-                column: "UserID");
+                column: "NoteCategoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NoteCategory_CompanyID",
+                table: "NoteCategory",
+                column: "CompanyID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Topic_CompanyID",
@@ -307,11 +320,6 @@ namespace EnterChatWeb.Migrations
                 name: "IX_TopicMessage_TopicID",
                 table: "TopicMessage",
                 column: "TopicID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TopicMessage_UserID",
-                table: "TopicMessage",
-                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_CompanyID",
@@ -337,6 +345,9 @@ namespace EnterChatWeb.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ChatMembers");
+
+            migrationBuilder.DropTable(
                 name: "File");
 
             migrationBuilder.DropTable(
@@ -347,6 +358,9 @@ namespace EnterChatWeb.Migrations
 
             migrationBuilder.DropTable(
                 name: "TopicMessage");
+
+            migrationBuilder.DropTable(
+                name: "NoteCategory");
 
             migrationBuilder.DropTable(
                 name: "Topic");

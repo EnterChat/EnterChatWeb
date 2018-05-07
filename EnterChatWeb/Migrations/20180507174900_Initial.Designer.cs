@@ -11,8 +11,8 @@ using System;
 namespace EnterChatWeb.Migrations
 {
     [DbContext(typeof(EnterChatContext))]
-    [Migration("20180501131319_NoteCategories")]
-    partial class NoteCategories
+    [Migration("20180507174900_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -218,6 +218,8 @@ namespace EnterChatWeb.Migrations
 
                     b.Property<DateTime>("RegistrationDate");
 
+                    b.Property<string>("Salt");
+
                     b.Property<int?>("WorkerID");
 
                     b.HasKey("ID");
@@ -284,7 +286,7 @@ namespace EnterChatWeb.Migrations
                         .WithMany("Notes")
                         .HasForeignKey("CompanyID");
 
-                    b.HasOne("EnterChatWeb.Models.NoteCategory")
+                    b.HasOne("EnterChatWeb.Models.NoteCategory", "NoteCategory")
                         .WithMany("Notes")
                         .HasForeignKey("NoteCategoryID");
                 });

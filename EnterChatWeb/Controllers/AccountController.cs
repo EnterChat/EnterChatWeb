@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using EnterChatWeb.Data;
 using EnterChatWeb.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,16 +58,31 @@ namespace EnterChatWeb.Controllers
                     if (worker != null && worker.CompanyID == companyTest.ID)
                     {
                         Department department = await _context.Departments.FirstOrDefaultAsync(d => d.ID == worker.DepartmentID);
-                        User user = await _context.Users.FirstOrDefaultAsync(u => u.ID == worker.ID);
+                        User user = await _context.Users.FirstOrDefaultAsync(u => u.WorkerID == worker.ID);
                         worker.Department = department;
+
+                        User user_loginTest = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
+
+                        if (user_loginTest != null)
+                        {
+                            ModelState.AddModelError("", "Пользователь с таким логином уже есть!");
+                        }
+
                         if (user == null)
                         {
+                            if (user.Login == model.Login)
+                            {
+                                ModelState.AddModelError("", "Пользователь с таким логином уже существует!");
+                            }
+
+                            byte[] salt = GenerateSalt();
                             user = new User
                             {
                                 Login = model.Login,
                                 RegistrationDate = DateTime.Now,
-                                Password = model.Password,
+                                Password = Hashing(model.Password, salt),
                                 Email = model.Email,
+                                Salt = Convert.ToBase64String(salt),
                                 Worker = worker,
                                 Company = companyTest
                             };
@@ -101,20 +119,34 @@ namespace EnterChatWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login &&
-                u.Password == model.Password);
+
+                User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
                 if (user != null)
                 {
-                    Worker worker = await _context.Workers.FirstOrDefaultAsync(u => u.ID == user.WorkerID);
-                    Department department = await _context.Departments.FirstOrDefaultAsync(d => d.ID == worker.DepartmentID);
-                    Company company = await _context.Companies.FirstOrDefaultAsync(u => u.ID == user.CompanyID);
-                    worker.Department = department;
-                    user.Worker = worker;
-                    user.Company = company;
-                    await Authenticate(user);
-                    return RedirectToAction("About", "Data");
+
+                    byte[] user_salt = Convert.FromBase64String(user.Salt);
+                    string hash = Hashing(model.Password, user_salt);
+                    if (user.Password == hash)
+                    {
+                        Worker worker = await _context.Workers.FirstOrDefaultAsync(u => u.ID == user.WorkerID);
+                        Department department = await _context.Departments.FirstOrDefaultAsync(d => d.ID == worker.DepartmentID);
+                        Company company = await _context.Companies.FirstOrDefaultAsync(u => u.ID == user.CompanyID);
+                        worker.Department = department;
+                        user.Worker = worker;
+                        user.Company = company;
+                        await Authenticate(user);
+                        return RedirectToAction("About", "Data");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    }
+
                 }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                else
+                {
+                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                }
             }
             return View(model);
         }
@@ -134,7 +166,7 @@ namespace EnterChatWeb.Controllers
                 Company companyTest = await _context.Companies.FirstOrDefaultAsync(c => c.Title.Equals(model.Title));
                 if (companyTest == null)
                 {
-                    User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                    User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
                     if (user == null)
                     {
                         //добавляем данные в бд
@@ -161,10 +193,12 @@ namespace EnterChatWeb.Controllers
                             Company = company,
                             Department = department
                         };
+                        byte[] salt = GenerateSalt();
                         user = new User
                         {
                             Email = model.Email,
-                            Password = model.Password,
+                            Salt = Convert.ToBase64String(salt),
+                            Password = Hashing(model.Password, salt),
                             Login = model.Login,
                             Company = company,
                             Worker = worker,
@@ -183,7 +217,7 @@ namespace EnterChatWeb.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                        ModelState.AddModelError("", "Пользователь с таким логином уже существует");
                     }
                 }
                 else
@@ -213,6 +247,29 @@ namespace EnterChatWeb.Controllers
                 ClaimsIdentity.DefaultRoleClaimType);
             // установка аутентификационных куки
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+        }
+
+        private string Hashing(string password, byte[] salt)
+        {
+            // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
+            return hashed;
+
+        }
+
+        private byte[] GenerateSalt()
+        {
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            return salt;
         }
     }
 }

@@ -217,6 +217,8 @@ namespace EnterChatWeb.Migrations
 
                     b.Property<DateTime>("RegistrationDate");
 
+                    b.Property<string>("Salt");
+
                     b.Property<int?>("WorkerID");
 
                     b.HasKey("ID");

@@ -17,7 +17,7 @@ namespace EnterChatWeb.Models
         public string Login { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-
+        public string Salt { get; set; }
         public Company Company { get; set; }
         public Worker Worker { get; set; }
     }
