@@ -11,20 +11,19 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <form id="login-form" method="post" asp-controller="Account" asp-action="Login">
+    <form method="post"  id="login-form" asp-controller="Account" asp-action="Login">
         <div asp-validation-summary="All"></div>
-        <div class="container">
-            <div class="imgcontainer">
-                <img src="~/images/img_ava.png" alt="Avatar" class="avatar">
-            </div>
+
+        <div class="imgcontainer">
+            <img src="~/images/logo.png" alt="Avatar" class="avatar">
+        </div>
+        <div class="container text-center">
             <div>
-                <label asp-for="Login">Логин: </label>
-                <input asp-for="Login" />
+                <input asp-for="Login" placeholder="Логин" />
             </div>
 
             <div>
-                <label asp-for="Password">Пароль: </label>
-                <input asp-for="Password" />
+                <input asp-for="Password" placeholder="Пароль" />
             </div>
             <input id="action-submit" type="submit" value="Войти" />
         </div>

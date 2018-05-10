@@ -8,46 +8,41 @@
     <meta name="viewport" content="width=device-width" />
     <title>Зарегистрировать компанию</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <form asp-action="RegisterCompany" asp-controller="Account" method="post">
+    <form asp-action="RegisterCompany" id="login-form" style="padding-top:25px;" asp-controller="Account" method="post">
         <div asp-validation-summary="All"></div>
-        <p>
-            <label asp-for="Title">Название компании: </label>
-            <input asp-for="Title" />
-        </p>
-        <p>
-            <label asp-for="WorkEmail">Корпоративная почта: </label>
-            <input asp-for="WorkEmail" />
-        </p>
+        <div class="container text-center">
+            <div>
+                <input asp-for="Title" placeholder="Название компании" />
+            </div>
+            <div>
+                <input asp-for="WorkEmail" placeholder="Корпоративная почта" />
+            </div>
 
-        <p>
-            <label asp-for="DepTitle">Название главного отдела(администраторы): </label>
-            <input asp-for="DepTitle" />
-        </p>
+            <div>
+                <input asp-for="DepTitle" placeholder="Название главного отдела(администраторы)" />
+            </div>
 
-        <p>
-            <label asp-for="FirstName">Имя: </label>
-            <input asp-for="FirstName" />
-        </p>
-        <p>
-            <label asp-for="SecondName">Фамилия: </label>
-            <input asp-for="SecondName" />
-        </p>
-        <p>
-            <label asp-for="Login">Логин: </label>
-            <input asp-for="Login" />
-        </p>
-        <p>
-            <label asp-for="Email">Почта: </label>
-            <input asp-for="Email" />
-        </p>
-        <p>
-            <label asp-for="Password">Пароль: </label>
-            <input asp-for="Password" />
-        </p>
-
-        <button type="submit">Зарегистрировать</button>
+            <div>
+                <input asp-for="FirstName" placeholder="Имя" />
+            </div>
+            <div>
+                <input asp-for="SecondName" placeholder="Фамилия" />
+            </div>
+            <div>
+                <input asp-for="Login" placeholder="Придумайте логин" />
+            </div>
+            <div>
+                <input asp-for="Email" placeholder="Почта" />
+            </div>
+            <div>
+                <input asp-for="Password" placeholder="Придумайте пароль" />
+            </div>
+            <input id="action-submit" type="submit" value="Зарегистрировать"/>
+        </div>
+            
     </form>
 </body>
 </html>
