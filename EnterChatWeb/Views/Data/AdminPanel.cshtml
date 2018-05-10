@@ -5,56 +5,85 @@
     <title>Панель администратора</title>
 </head>
 
-<h1 id="page-header">Панель управления компанией @Model.Title</h1>
-<h2>Информация</h2>
-<p>Название компании: @Model.Title</p>
-<p>Адрес корпоративной почты: @Model.WorkEmail</p>
-<p>Дата регистрации: @Model.CreationDate</p>
+<nav class="navbar page-header">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <h3>Панель администрирования</h3>
+        </div>
+        <ul class="nav navbar-nav navbar-right" style="margin-right:260px; margin-top:10px;">
+            <li class="dropdown">
+                <a class="dropdown-toggle" id="my-toggle" data-toggle="dropdown" href="#">
+                    <span class="glyphicon glyphicon-option-vertical"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a asp-action="EditCompany" asp-controller="Data"
+                           asp-route-id="@Model.ID">Изменить данные компании</a></li>
+                    <li><a asp-action="AddWorker">Добавить сотрудника</a></li>
+                    <li><a asp-action="AddDep">Добавить отдел</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-<a  class="btn btn-primary" asp-action="EditCompany" asp-controller="Data" asp-route-id="@Model.ID">Изменить данные компании</a>
+<div class="first-head">
 
-<h2>Список отделов и работников <a class="btn btn-primary" asp-action="AddWorker">Добавить сотрудника</a> 
-                                <a class="btn btn-primary" asp-action="AddDep">Добавить отдел</a></h2>
-<div class="list-group">
-    @foreach (var item in Model.Departments)
-    {
-        <h3>@item.Title</h3>
-        <p>Привилегии администратора: @item.StringStatus</p>
+<div class="container-fluid info-card">
+    <div class="container-fluid info-shit">
+        <h2>Информация</h2>
+        <p>Название компании: @Model.Title</p>
+        <p>Адрес корпоративной почты: @Model.WorkEmail</p>
+        <p>Дата регистрации: @Model.CreationDate</p>
+    </div>
+</div>
+</div>
+<div class="container-fluid info-card">
+    <div class="container-fluid info-shit">
+
+        <h2>
+            Список отделов и работников
+        </h2>
         <div class="list-group">
-            @foreach (var worker in item.UserPlusWorkers)
+            @foreach (var item in Model.Departments)
             {
-                <div class="list-group-item col-xs-6">
-                    <h4>@worker.FirstName @worker.SecondName</h4>
-                    @if (@worker.Email != null && @worker.RegistrationDate != null)
+                <h3>@item.Title <small>Привилегии администратора: @item.StringStatus</small></h3>
+                <div class="list-group">
+                    @foreach (var worker in item.UserPlusWorkers)
                     {
-                        <h5>@worker.Email Зарегистрировался: @worker.RegistrationDate</h5>
-                    }
-                    else
-                    {
-                        <h5>Ещё не активирован</h5>
+                        <div class="list-group-item">
+                            <h4>@worker.FirstName @worker.SecondName</h4>
+                            @if (@worker.Email != null && @worker.RegistrationDate != null)
+                            {
+                                <h5>@worker.Email Зарегистрировался: @worker.RegistrationDate</h5>
+                            }
+                            else
+                            {
+                                <h5>Ещё не активирован</h5>
 
-                    }
+                            }
 
-                    @if (worker.InviteCode == null)
-                    {
-                        <p>Инвайт-кода нет</p>
-                    }
-                    else
-                    {
-                        <p>Инвайт-код: @worker.InviteCode</p>
-                    }
-                    @if (worker.InviteCode == null)
-                    {
-                        <a asp-action="EditAdmin" asp-controller="Data" asp-route-id="@worker.ID">Изменить</a>
-                    }
-                    else
-                    {
-                        <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@worker.ID">Изменить</a>
-                        <a asp-action="DeleteWorker" asp-controller="Data" asp-route-id="@worker.ID">Удалить</a>
+                            @if (worker.InviteCode == null)
+                            {
+                                <p>Инвайт-кода нет</p>
+                            }
+                            else
+                            {
+                                <p>Инвайт-код: @worker.InviteCode</p>
+                            }
+                            @if (worker.InviteCode == null)
+                            {
+                                <a asp-action="EditAdmin" asp-controller="Data" asp-route-id="@worker.ID">Изменить</a>
+                            }
+                            else
+                            {
+                                <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@worker.ID">Изменить</a>
+                                <a asp-action="DeleteWorker" asp-controller="Data" asp-route-id="@worker.ID">Удалить</a>
+                            }
+                        </div>
+
                     }
                 </div>
-
             }
         </div>
-    }
+    </div>
 </div>

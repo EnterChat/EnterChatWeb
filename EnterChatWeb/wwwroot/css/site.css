@@ -1,6 +1,8 @@
 ﻿body {
     padding-bottom: 20px;
     background-color: #eaeaea;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* Wrapping element */
@@ -86,18 +88,50 @@
     background-color: #5E35B1;
 }
 
-.body-content {
-    margin-left: 280px; /* Same as the width of the sidebar */
+.main-body-content {
+    margin-left: 170px; /* Same as the width of the sidebar */
     padding: 0px 10px;
 }
 
-#page-header {
+.page-header {
     background-color: #5E35B1;
     color: #ffffff;
     margin-top: 0px;
     margin-left: -20px;
-    padding: 20px;
+    padding-left: 30px;
+    border: 0px;
     box-shadow: 3px 3px 7px grey;
+    position: fixed; /* Фиксированное положение */
+    width: 100%;
+}
+
+.first-head{
+    margin-top: 80px;
+}
+
+#my-toggle {
+    background-color: #5E35B1;
+    color: #ffffff;
+    border-radius: 40%;
+}
+
+#my-toggle:hover{
+    background-color: #3D0165;
+}
+
+.info-card {
+    background: #ffffff;
+    margin-right: 100px;
+    margin-top: 10px;
+    box-shadow: 1px 1px 3px grey;
+}
+
+.info-shit{
+    padding-bottom:16px;
+}
+
+#title-text {
+    margin-left: -20px;
 }
 
 #main-view {
@@ -124,7 +158,7 @@
     margin-top: 120px;
 }
 
-.btn-primary {
+.btn-go {
     background-color: #ffffff;
     color: #5E35B1;
     font-weight: bold;
@@ -137,7 +171,7 @@
     border: 2px solid #3D0165;
 }
 
-.btn-primary:hover{
+.btn-go:hover{
     background-color: #3D0165;
     color: #ffffff;
     border: 2px solid #ffffff;
