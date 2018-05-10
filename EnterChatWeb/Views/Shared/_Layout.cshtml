@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -17,54 +19,37 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @{
-        if (Boolean.Parse(User.FindFirst(x => x.Type == "Status").Value))
-        {
-            <a asp-area="" asp-controller="Data" asp-action="AdminPanel"
-               class="navbar-brand">Панель администратора</a>
+    <div class="sidenav">
+        @if(Boolean.Parse(User.FindFirst(x => x.Type == "Status").Value)){
+           <a asp-area="" asp-controller="Data" asp-action="AdminPanel">
+                Панель администратора</a>
         }
         else
         {
-            <a asp-area="" asp-controller="Data" asp-action="AccountPanel"
-               class="navbar-brand">Мой аккаунт</a>
+           <a asp-area="" asp-controller="Data" asp-action="AccountPanel">
+                Мой аккаунт</a>
 
         }
-                }
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @{
-                        if (Boolean.Parse(User.FindFirst(x => x.Type == "Status").Value))
-                         {
-                            <li><a asp-area="" asp-controller="Data" asp-action="AccountPanel">Мой аккаунт</a></li>
-                         }
-                    }
-
-                    <li><a asp-area="" asp-controller="Data" asp-action="About">О компании</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="Workers">Сотрудники</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="Files">Файлы</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="GroupChat">Групповой чат</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="Notes">Заметки</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="Topics">Обсуждения</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        @if (Boolean.Parse(User.FindFirst(x => x.Type == "Status").Value))
+        {
+            <a asp-area="" asp-controller="Data" asp-action="AccountPanel">
+                <span class="glyphicon glyphicon-user" id="menu_icons"></span>Мой аккаунт</a>
+        }
+        <a asp-area="" asp-controller="Data" asp-action="About">
+            <span class="glyphicon glyphicon-star" id="menu_icons"></span>О компании</a>
+        <a asp-area="" asp-controller="Data" asp-action="Workers">
+            <span class="glyphicon glyphicon-briefcase" id="menu_icons"></span>Сотрудники</a>
+        <a asp-area="" asp-controller="Data" asp-action="Files">
+            <span class="glyphicon glyphicon-file" id="menu_icons"></span>Файлы</a>
+        <a asp-area="" asp-controller="Data" asp-action="GroupChat">
+            <span class="glyphicon glyphicon-comment" id="menu_icons"></span>Групповой чат</a>
+        <a asp-area="" asp-controller="Data" asp-action="Notes">
+            <span class="glyphicon glyphicon-tasks" id="menu_icons"></span>Заметки</a>
+        <a asp-area="" asp-controller="Data" asp-action="Topics">
+            <span class="glyphicon glyphicon-list-alt" id="menu_icons"></span>Обсуждения</a>
+    </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <!-- <p>&copy; 2018 - EnterChatWeb</p> -->
-        </footer>
     </div>
 
     <environment include="Development">

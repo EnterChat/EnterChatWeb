@@ -1,6 +1,6 @@
 ﻿body {
-    padding-top: 50px;
     padding-bottom: 20px;
+    background-color: #eaeaea;
 }
 
 /* Wrapping element */
@@ -32,6 +32,13 @@
     .carousel-caption {
         display: none;
     }
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
 }
 
 .msg {
@@ -44,4 +51,51 @@
     overflow: scroll;
     width: 100%;
     white-space: nowrap;
+}
+/* The sidebar menu */
+.sidenav {
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 270px; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #ffffff; /* White */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+    box-shadow: 3px 3px 7px grey;
+}
+
+/* The navigation menu links */
+.sidenav a {
+    padding: 8px 8px 8px 16px;
+    text-decoration: none;
+    font-size: 19px;
+    font-family: 'Roboto', sans-serif;
+    color: #818181;
+    display: block;
+}
+
+#menu_icons {
+    padding: 2px 20px 2px 2px;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+    color: #ffffff;
+    background-color: #5E35B1;
+}
+
+.body-content {
+    margin-left: 280px; /* Same as the width of the sidebar */
+    padding: 0px 10px;
+}
+
+#page-header {
+    background-color: #5E35B1;
+    color: #ffffff;
+    margin-top: 0px;
+    margin-left: -20px;
+    padding: 20px;
+    box-shadow: 3px 3px 7px grey;
 }
