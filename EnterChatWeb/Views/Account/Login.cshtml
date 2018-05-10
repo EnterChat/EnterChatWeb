@@ -8,21 +8,26 @@
     <meta name="viewport" content="width=device-width" />
     <title>Войти в аккаунт</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <form method="post" asp-controller="Account" asp-action="Login">
+    <form id="login-form" method="post" asp-controller="Account" asp-action="Login">
         <div asp-validation-summary="All"></div>
+        <div class="container">
+            <div class="imgcontainer">
+                <img src="~/images/img_ava.png" alt="Avatar" class="avatar">
+            </div>
+            <div>
+                <label asp-for="Login">Логин: </label>
+                <input asp-for="Login" />
+            </div>
 
-        <div>
-            <label asp-for="Login">Логин: </label>
-            <input asp-for="Login" />
+            <div>
+                <label asp-for="Password">Пароль: </label>
+                <input asp-for="Password" />
+            </div>
+            <input id="action-submit" type="submit" value="Войти" />
         </div>
-
-        <div>
-            <label asp-for="Password">Пароль: </label>
-            <input asp-for="Password" />
-        </div>
-        <input type="submit" value="Войти" />
     </form>
 </body>
 </html>

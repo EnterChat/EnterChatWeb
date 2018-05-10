@@ -6,25 +6,29 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>EnterChat: Главная страница</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
-    <div class="jumbotron">
-        <h3 class="text-center">Добро пожаловать в сервис EnterChat!</h3>
-    </div>
-    <div class="container">
-        <div class="center-block">
-            <h2>Начало работы</h2>
-            <p>Войдите в учётную запись или зарегистрируйтесь, чтобы продолжить работу.</p>
-            <p><a class="btn btn-primary" asp-action="Login">Войти</a></p>
-            <p><a class="btn btn-primary" asp-action="RegisterWorker">Зарегистрироваться как сотрудник</a></p>
-            <p><a class="btn btn-primary" asp-action="RegisterCompany">Зарегистрировать компанию</a></p>
+<body id="main-view">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" id="action-link" href="https://github.com/EnterChat">
+                    <i class="fa fa-github"></i> Github</a>
+            </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li ><a id="action-link" asp-action="RegisterWorker"><span class="glyphicon glyphicon-user"></span>
+                         Зарегистрироваться как сотрудник</a></li>
+                    <li><a id="action-link" asp-action="RegisterCompany"><span class="glyphicon glyphicon-home"></span>
+                         Зарегистрировать компанию</a></li>
+                </ul>
         </div>
-        <div class="center-block">
-            <h2>Исходный код</h2>
-            <p>Исходные коды данного проекта доступны на GitHub.</p>
-            <p><a class="btn btn-primary" href="https://github.com/EnterChat">Перейти</a></p>
-        </div>
+    </nav>
+    <div class="container-fluid bg-1 text-center">
+        <h1 id="main-title">Добро пожаловать в <br>сервис EnterChat!</h1>
+        <p><a class="btn btn-primary" asp-action="Login">Войти</a></p>
     </div>
 </body>
 </html>
