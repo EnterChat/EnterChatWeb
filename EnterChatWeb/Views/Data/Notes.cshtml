@@ -43,9 +43,9 @@
                     <p>Создан: @note.CreationDate</p>
                     <p>Автор: @note.UserPlusWorker.FirstName @note.UserPlusWorker.SecondName @note.UserPlusWorker.Email</p>
                     <p>Отдел: @note.UserPlusWorker.DepartmentName</p>
-                    <a asp-action="EditNote" asp-controller="Data" asp-route-id="@note.ID">
-                    <span><i class="material-icons">settings</i></span></a>
-                    <a asp-action="DeleteFile" asp-controller="Data" asp-route-id="@note.ID">
+                    <a asp-action="EditNote" id="active-link" asp-controller="Data" asp-route-id="@note.ID">
+                    <span><i class="material-icons">edit</i></span></a>
+                    <a asp-action="DeleteFile" id="active-link" asp-controller="Data" asp-route-id="@note.ID">
                     <span><i class="material-icons">highlight_off</i></span></a>
                 </div>
                 }

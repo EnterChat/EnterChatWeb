@@ -115,6 +115,18 @@
     border-radius: 40%;
 }
 
+#my-main-button {
+    background-color: #5E35B1;
+    color: #ffffff;
+    border-radius: 20%;
+    padding: 0px;
+    margin-top: 10px;
+}
+
+#my-main-button:hover{
+    background-color: #3D0165;
+}
+
 #my-toggle:hover{
     background-color: #3D0165;
 }
@@ -268,4 +280,12 @@ img.avatar {
 .func-button {
     float: left;
     vertical-align: text-top;
+}
+
+#active-link{
+    color: #5E35B1;
+}
+
+#active-link:hover{
+    color: #3D0165;
 }

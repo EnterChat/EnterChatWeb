@@ -4,14 +4,25 @@
     <title>Обсуждения</title>
 </head>
 
-<h1 id="page-header">Обсуждения компании <a class="btn btn-primary" asp-action="AddTopic" asp-controller="Data">Создать чат</a></h1>
+<nav class="navbar page-header">
+<div class="container-fluid">
+    <div class="navbar-header">
+        <h3>Обсуждения компании</h3>
+    </div>
+    <ul class="nav navbar-nav navbar-right" style="margin-right:260px; margin-top:10px;">
+        <li><a id="my-main-button" asp-action="AddTopic" asp-controller="Data">
+            <span><i class="material-icons">add</i></span></a></li>
+    </ul>
+</div>
+</nav>
 
-
-<div class="list-group">
+<div class="first-head">
+    <div class="container-fluid info-card">
+        <div class="container-fluid info-shit" style="padding-top: 10px;">
     @foreach (Topic topic in Model)
     {
-        <div class="list-group-item col-md-12">
-            <h4><a asp-action="TopicChat" asp-controller="Data" asp-route-id="@topic.ID">@topic.Title</a></h4>
+        <div class="list-item-note">
+            <h4><a asp-action="TopicChat" id="active-link" asp-controller="Data" asp-route-id="@topic.ID">@topic.Title</a></h4>
             <div style="display:inline">
                 <p style="display:inline-block">Участники: </p>
                 @foreach (var member in topic.WorkerChatMembers)
@@ -23,10 +34,14 @@
             <p>Создан: @topic.CreationDate</p>
             @if (Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value) == topic.UserID)
             {
-                <a asp-action="EditTopicTitle" asp-controller="Data" asp-route-id="@topic.ID">Изменить название</a>
-                <a asp-action="DeleteTopic" asp-controller="Data" asp-route-id="@topic.ID">Удалить чат</a>
-                <a asp-action="DeleteChatMember" asp-controller="Data" asp-route-id="@topic.ID">Удалить участника</a>
-                <a asp-action="AddChatMember" asp-controller="Data" asp-route-id="@topic.ID">Добавить участника</a>
+                <a asp-action="EditTopicTitle" id="active-link" asp-controller="Data" asp-route-id="@topic.ID">
+                <span><i class="material-icons">edit</i></span></a>
+                <a asp-action="DeleteTopic" id="active-link" asp-controller="Data" asp-route-id="@topic.ID">
+                <span><i class="material-icons">highlight_off</i></span></a>
+                <a asp-action="DeleteChatMember" id="active-link" asp-controller="Data" asp-route-id="@topic.ID">
+                <span><i class="material-icons">person_outline</i></span></a>
+                <a asp-action="AddChatMember" id="active-link" asp-controller="Data" asp-route-id="@topic.ID">
+                <span><i class="material-icons">person_add</i></span></a>
             }
             else
             {
@@ -34,4 +49,7 @@
             }
         </div>
     }
+            </div>
 </div>
+</div>
+

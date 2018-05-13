@@ -54,14 +54,14 @@
                             <span>
                                  @if (worker.InviteCode == null)
                             {
-                                <a asp-action="EditAdmin"  asp-controller="Data" asp-route-id="@worker.ID">
-                                    <span><i style="font-size:14px" class="material-icons">settings</i></span></a>
+                                <a asp-action="EditAdmin" id="active-link" asp-controller="Data" asp-route-id="@worker.ID">
+                                    <span><i style="font-size:14px" class="material-icons">edit</i></span></a>
                             }
                             else
                             {
-                                <a asp-action="EditWorker" asp-controller="Data" asp-route-id="@worker.ID">
-                            <span><i style="font-size:14px" class="material-icons">settings</i></span></a>
-                                <a asp-action="DeleteWorker" asp-controller="Data" asp-route-id="@worker.ID">
+                                <a asp-action="EditWorker" id="active-link" asp-controller="Data" asp-route-id="@worker.ID">
+                            <span><i style="font-size:14px" class="material-icons">edit</i></span></a>
+                                <a asp-action="DeleteWorker" id="active-link" asp-controller="Data" asp-route-id="@worker.ID">
                             <span><i style="font-size:14px" class="material-icons">highlight_off</i></span></a>
                             }
                             </span>
