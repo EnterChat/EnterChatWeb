@@ -97,7 +97,7 @@
     background-color: #5E35B1;
     color: #ffffff;
     margin-top: 0px;
-    margin-left: -20px;
+    margin-left: -30px;
     padding-left: 30px;
     border: 0px;
     box-shadow: 3px 3px 7px grey;
@@ -124,6 +124,10 @@
     margin-right: 100px;
     margin-top: 10px;
     box-shadow: 1px 1px 3px grey;
+}
+
+.suka{
+    background: #ff0000;
 }
 
 .info-shit{
@@ -228,4 +232,40 @@ input[type=text], input[type=password], input[type=email]{
 /* Avatar image */
 img.avatar {
     margin-top: 16px;
+}
+
+.span-email{
+    font-size: 15px;
+}
+
+.list-item-worker {
+    border-left: 4px solid #3D0165;
+    background: #ddccff;
+    padding-left: 15px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-right: 5px;
+    box-shadow: 1px 1px 3px grey;
+}
+
+.list-item-note {
+    padding: 12px;
+    margin: 3px;
+    border: 1px solid #5E35B1;
+    border-radius: 8px;
+}
+
+.main-menu-list-item{
+    padding: 18px;
+    font-size: 17px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.func-button {
+    float: left;
+    vertical-align: text-top;
 }
