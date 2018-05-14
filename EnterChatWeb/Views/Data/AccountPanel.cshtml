@@ -4,11 +4,28 @@
     <title>Аккаунт пользователя</title>
 </head>
 
-<h1 id="page-header"> Панель управления аккаунтом пользователя</h1>
+<nav class="navbar page-header">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <h3>Управление аккаунтом</h3>
+        </div>
+        <ul class="nav navbar-nav navbar-right" style="margin-right:260px; margin-top:10px;">
+            <li>
+                <a id="my-main-button" asp-action="Logout" asp-controller="Account">
+                    <span><i class="material-icons">power_settings_new</i></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-<p>Логин: @Model.Login</p>
-<p>Почта: @Model.Email</p>
-<p>Дата регистрации: @Model.RegistrationDate</p>
+<div class="first-head">
+    <div class="container-fluid info-card" style="padding-top: 10px; padding-bottom: 10px;">
+        <p>Логин: @Model.Login</p>
+        <p>Почта: @Model.Email</p>
+        <p>Дата регистрации: @Model.RegistrationDate</p>
 
-<p><a class="btn btn-primary" asp-controller="Data" asp-action="EditUser" asp-route-id="@Model.ID">Изменить данные</a></p>
-<p><a class="btn btn-primary" asp-controller="Account" asp-action="Logout">Выйти из аккаунта</a></p>
+        <p><a class="btn btn-primary" asp-controller="Data" asp-action="EditUser" 
+              asp-route-id="@Model.ID">Изменить данные</a></p>
+    </div>
+</div>
