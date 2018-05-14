@@ -27,7 +27,7 @@ namespace EnterChatWeb.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Пожалуйста, придумайте пароль!")]
-        [Range(8, 20, ErrorMessage = "Пароль должен быть не меньше 8 и не больше 20 символов!")]
+        [StringLength(20, MinimumLength = 8, ErrorMessage = "Пароль должен быть не меньше 8 и не больше 20 символов!")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Пожалуйста, введите название первого отдела!")]

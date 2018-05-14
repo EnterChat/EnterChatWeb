@@ -33,6 +33,28 @@ namespace EnterChatWeb.Controllers
         {
             int comp_id = Int32.Parse(HttpContext.User.FindFirst("CompanyID").Value);
             var company = await _context.Companies.FirstOrDefaultAsync(c => c.ID == comp_id);
+            var departments = await _context.Departments.Where(d => d.CompanyID == comp_id).ToListAsync();
+            foreach (Department dep in departments)
+            {
+                var workers = await _context.Workers.Where(x => x.DepartmentID == dep.ID).ToListAsync();
+                List<UserPlusWorkerModel> userPlusWorkers = new List<UserPlusWorkerModel>();
+                if (workers != null)
+                {
+                    foreach (Worker w in workers)
+                    {
+                        UserPlusWorkerModel userPlusWorkerModel = new UserPlusWorkerModel(w.FirstName, w.SecondName, w.InviteCode);
+                        User user = await _context.Users.Where(u => u.WorkerID == w.ID).FirstOrDefaultAsync();
+                        if (user != null)
+                        {
+                            userPlusWorkerModel.RegistrationDate = user.RegistrationDate;
+                            userPlusWorkerModel.Email = user.Email;
+                        }
+                        userPlusWorkers.Add(userPlusWorkerModel);
+                    }
+                    dep.UserPlusWorkers = userPlusWorkers;
+                }
+            }
+            company.Departments = departments;
             return View(company);
         }
 

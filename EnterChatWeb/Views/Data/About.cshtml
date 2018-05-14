@@ -3,7 +3,60 @@
 <head>
     <title>О компании</title>
 </head>
-<h1 id="page-header">Информация о компании</h1>
-<p>Название: @Model.Title</p>
-<p>Адрес корпоративной почты: @Model.WorkEmail</p>
-<p>Дата регистрации: @Model.CreationDate</p>
+<nav class="navbar page-header">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <h3>Информация о компании</h3>
+        </div>
+    </div>
+</nav>
+<div class="first-head">
+
+    <div class="container-fluid info-card">
+        <div class="container-fluid info-shit">
+            <h2>Информация</h2>
+            <p>Название компании: @Model.Title</p>
+            <p>Адрес корпоративной почты: @Model.WorkEmail</p>
+            <p>Дата регистрации: @Model.CreationDate</p>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid info-card">
+    <div class="container-fluid info-shit">
+
+        <h2>
+            Список отделов и работников
+        </h2>
+        <div class="container-fluid">
+            @foreach (var item in Model.Departments)
+            {
+                <h3>@item.Title <small>Привилегии администратора: @item.StringStatus</small></h3>
+                    @foreach (var worker in item.UserPlusWorkers)
+                    {
+                        <div class="list-item-worker">
+                            <h4>@worker.FirstName @worker.SecondName <span class="span-email">@worker.Email</span>
+
+                            </h4>
+                            @if (@worker.Email != null && @worker.RegistrationDate != null)
+                            {
+                                <h5>Зарегистрировался: @worker.RegistrationDate</h5>
+                            }
+                            else
+                            {
+                                <h5>Ещё не активирован</h5>
+
+                            }
+
+                            @if (worker.InviteCode == null)
+                            {
+                                <p>Создатель хаба</p>
+                            }
+                           
+                        </div>
+
+                    }
+            }
+        </div>
+    </div>
+</div>

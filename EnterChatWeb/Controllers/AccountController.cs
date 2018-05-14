@@ -70,11 +70,6 @@ namespace EnterChatWeb.Controllers
 
                         if (user == null)
                         {
-                            if (user.Login == model.Login)
-                            {
-                                ModelState.AddModelError("", "Пользователь с таким логином уже существует!");
-                            }
-
                             byte[] salt = GenerateSalt();
                             user = new User
                             {
@@ -92,7 +87,7 @@ namespace EnterChatWeb.Controllers
 
                             await Authenticate(user);
 
-                            return RedirectToAction("About", "Home");
+                            return RedirectToAction("AccountPanel", "Data");
                         }
                         else
                         {
@@ -135,7 +130,7 @@ namespace EnterChatWeb.Controllers
                         user.Worker = worker;
                         user.Company = company;
                         await Authenticate(user);
-                        return RedirectToAction("About", "Data");
+                        return RedirectToAction("AccountPanel", "Data");
                     }
                     else
                     {
@@ -213,7 +208,7 @@ namespace EnterChatWeb.Controllers
 
                         await Authenticate(user);
 
-                        return RedirectToAction("About", "Data");
+                        return RedirectToAction("AccountPanel", "Data");
                     }
                     else
                     {

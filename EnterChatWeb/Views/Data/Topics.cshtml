@@ -45,7 +45,8 @@
             }
             else
             {
-                <a asp-action="LeaveTopicChat" asp-controller="Data" asp-route-id="@topic.ID">Покинуть чат</a>
+                <a asp-action="LeaveTopicChat" asp-controller="Data" asp-route-id="@topic.ID">
+                    <span><i id="active-link" class="material-icons">power_settings_new</i></span></a>
             }
         </div>
     }
