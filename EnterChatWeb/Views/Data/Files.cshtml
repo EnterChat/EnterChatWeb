@@ -4,28 +4,40 @@
     <title>Файлы</title>
 </head>
 
-<h1 id="page-header">Файлы компании</h1>
+<nav class="navbar page-header">
+<div class="container-fluid">
+    <div class="navbar-header">
+        <h3>Файлы компании</h3>
+    </div>
+</div>
+</nav>
 
-<div class="list-group">
-    <div class="list-group">
+<div class="first-head">
+<div class="container-fluid info-card" style="padding-top: 10px; padding-bottom: 10px;">
+    <div class="container-fluid info-shit">
         @foreach (File f in Model)
         {
-            <div class="list-group-item col-xs-6">
-                <p><a href="@Url.Content(f.Link)">@f.Name</a></p>
+            <div class="list-item-note">
+                <p><a id="active-link" href="@Url.Content(f.Link)">@f.Name</a>
+                   <span>
+                       <a asp-action="DeleteFile" asp-controller="Data" asp-route-id="@f.ID">
+                           <span><i id="active-link" class="material-icons" 
+                                    style="font-size: 14px;">highlight_off</i></span>
+                       </a>
+                   </span></p>
                 <p>Создан: @f.CreationDate</p>
                 <p>Автор: @f.UserPlusWorker.FirstName @f.UserPlusWorker.SecondName @f.UserPlusWorker.Email</p>
                 <p>Отдел: @f.UserPlusWorker.DepartmentName</p>
-                <a asp-action="DeleteFile" asp-controller="Data" asp-route-id="@f.ID">Удалить</a>
             </div>
 
         }
     </div>
-</div>
-
-<div>
+    <div>
     <h3>Выберите файл для загрузки</h3>
     <form asp-action="AddFile" asp-controller="Data" method="post" enctype="multipart/form-data">
         <input type="file" name="uploadedFile" /><br>
         <input type="submit" value="Загрузить" />
     </form>
+</div>
+</div>
 </div>
