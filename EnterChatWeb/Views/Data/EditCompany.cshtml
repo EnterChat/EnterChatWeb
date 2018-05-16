@@ -3,16 +3,23 @@
     Layout = null;
 }
 
-<form asp-action="EditCompany" asp-controller="Data" asp-route-id="@Model.ID">
-    <div class="form-group">
-        <label asp-for="Title" class="control-label">Название</label>
-        <input type="text" asp-for="Title" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="WorkEmail" class="control-label">Корпоративная почта</label>
-        <input type="text" asp-for="WorkEmail" class="form-control" />
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Сохранить" class="btn btn-default" />
-    </div>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Изменить данные компании</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<form asp-action="EditCompany" id="login-form" asp-controller="Data" asp-route-id="@Model.ID">
+    <div class="container text-center">
+        <div>
+            <input type="text" asp-for="Title" placeholder="Название"/>
+        </div>
+        <div>
+            <input type="text" asp-for="WorkEmail" placeholder="Корпоративная почта" />
+        </div>
+        <div>
+            <input id="action-submit" type="submit" value="Сохранить"/>
+        </div>
+     </div>
 </form>

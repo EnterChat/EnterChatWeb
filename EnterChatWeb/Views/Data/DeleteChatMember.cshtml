@@ -3,20 +3,30 @@
     Layout = null;
 }
 
-<h4>Удаление сотрудника из чата "@Model.Title"</h4>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Удаление участника</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
 
-<form asp-action="DeleteChatMember" method="post" asp-controller="Data">
+<form asp-action="DeleteChatMember" id="login-form" method="post" asp-controller="Data">
     <div asp-validation-summary="All"></div>
-    <div>
-        <select asp-for="ID" class="form-control">
-            @foreach (var mem in Model.WorkerChatMembers)
-            {
-                <option value="@mem.ID">@mem.FullName</option>
-            }
-        </select>
-    </div>
-    <input asp-for="@Model.TopicID" type="hidden" />
-    <div class="form-group">
-        <input type="submit" value="Удалить из чата" class="btn btn-default" />
+    <div class="container text-center">
+
+        <h4 style="margin-top:40px;">Удаление сотрудника из чата "@Model.Title"</h4>
+
+        <div>
+            <select asp-for="ID" class="form-control">
+                @foreach (var mem in Model.WorkerChatMembers)
+                {
+                    <option value="@mem.ID">@mem.FullName</option>
+                }
+            </select>
+        </div>
+        <input asp-for="@Model.TopicID" type="hidden" />
+        <div>
+            <input id="action-submit" type="submit" value="Удалить из чата" />
+        </div>
     </div>
 </form>

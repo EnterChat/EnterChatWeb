@@ -3,20 +3,30 @@
     Layout = null;
 }
 
-<h4>Добавление сотрудника в чат "@Model.Title"</h4>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Добавление участника</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
 
-<form asp-action="AddChatMember" method="post" asp-controller="Data">
+<form asp-action="AddChatMember" id="login-form" method="post" asp-controller="Data">
     <div asp-validation-summary="All"></div>
-    <div>
-        <select asp-for="ID" class="form-control">
-            @foreach (var mem in Model.WorkerChatMembers)
-            {
-                <option value="@mem.ID">@mem.FullName</option>
-            }
-        </select>
-    </div>
-    <input asp-for="@Model.TopicID" type="hidden" />
-    <div class="form-group">
-        <input type="submit" value="Добавить в чат" class="btn btn-default" />
+    <div class="container text-center">
+
+        <h4 style="margin-top:40px;">Добавление сотрудника в чат "@Model.Title"</h4>
+
+        <div>
+            <select asp-for="ID" class="form-control">
+                @foreach (var mem in Model.WorkerChatMembers)
+                {
+                    <option value="@mem.ID">@mem.FullName</option>
+                }
+            </select>
+        </div>
+        <input asp-for="@Model.TopicID" type="hidden" />
+        <div>
+            <input id="action-submit" type="submit" value="Добавить в чат"/>
+        </div>
     </div>
 </form>

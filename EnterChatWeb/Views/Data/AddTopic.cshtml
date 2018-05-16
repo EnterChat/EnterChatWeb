@@ -4,30 +4,33 @@
     Layout = null;
 }
 
-
 <head>
-    <title>Создать чат</title>
+    <meta name="viewport" content="width=device-width" />
+    <title>Создание чата</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
-<form asp-action="AddTopic" method="post" asp-controller="Data">
+<form asp-action="AddTopic" id="login-form" method="post" asp-controller="Data">
     <div asp-validation-summary="All"></div>
-    <div class="form-group">
-        <label asp-for="Title" class="control-label">Тема</label>
-        <input type="text" asp-for="Title" class="form-control" />
-    </div>
-    <div class="checkbox checkboxlist col-sm-9">
-        @{ 
-            for (int i = 0; i < Model.WorkerChatMembers.Count(); i++)
-            {
-                <input asp-for="@Model.WorkerChatMembers[i].IsAdded" type="checkbox"/>
-                <label asp-for="@Model.WorkerChatMembers[i].ID">@Model.WorkerChatMembers[i].FullName</label>
-                <input asp-for="@Model.WorkerChatMembers[i].ID" type="hidden"/>
-                <input asp-for="@Model.WorkerChatMembers[i].FullName" type="hidden"/>
-                <br/>
+    <div class="container text-center">
+        <div>
+            <input type="text" asp-for="Title" placeholder="Тема" />
+        </div>
+        <div class="checkbox checkboxlist col-sm-9">
+            @{
+                for (int i = 0; i < Model.WorkerChatMembers.Count(); i++)
+                {
+                    <input asp-for="@Model.WorkerChatMembers[i].IsAdded" type="checkbox" />
+                    <label asp-for="@Model.WorkerChatMembers[i].ID">@Model.WorkerChatMembers[i].FullName</label>
+                    <input asp-for="@Model.WorkerChatMembers[i].ID" type="hidden" />
+                    <input asp-for="@Model.WorkerChatMembers[i].FullName" type="hidden" />
+                    <br />
+                }
             }
-        }
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Создать" class="btn btn-default" />
+        </div>
+        <div>
+            <input id="action-submit" type="submit" value="Создать" />
+        </div>
     </div>
 </form>

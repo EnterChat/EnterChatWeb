@@ -3,29 +3,35 @@
     Layout = null;
 }
 
-<form asp-action="EditWorker" asp-controller="Data" asp-route-id="@Model.ID">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Редактирование данных сотрудника</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<form asp-action="EditWorker" id="login-form" asp-controller="Data" asp-route-id="@Model.ID">
     <div asp-validation-summary="All"></div>
-    <div class="form-group">
-        <label asp-for="FirstName" class="control-label">Имя</label>
-        <input type="text" asp-for="FirstName" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="SecondName" class="control-label">Фамилия</label>
-        <input type="text" asp-for="SecondName" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="InviteCode" class="control-label">Пригласительный код</label>
-        <input type="text" asp-for="InviteCode" class="form-control" />
-    </div>
-    <div>
-        <select asp-for="DepartmentID" class="form-control">
-            @foreach (var dep in Model.Departments)
-            {
-                <option value="@dep.ID">@dep.Title</option>
-            }
-        </select>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Сохранить" class="btn btn-default" />
-    </div>
+    <div class="container text-center">
+        <div>
+            <input type="text" asp-for="FirstName" placeholder="Имя" />
+        </div>
+        <div>
+            <input type="text" asp-for="SecondName" placeholder="Фамилия" />
+        </div>
+        <div>
+            <input type="text" asp-for="InviteCode" placeholder="Пригласительный код" />
+        </div>
+        <div>
+            <select asp-for="DepartmentID" class="form-control">
+                @foreach (var dep in Model.Departments)
+                {
+                    <option value="@dep.ID">@dep.Title</option>
+                }
+            </select>
+        </div>
+        <div>
+            <input id="action-submit" type="submit" value="Сохранить"/>
+        </div>
+   </div>
 </form>

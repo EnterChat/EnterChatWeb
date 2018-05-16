@@ -3,13 +3,22 @@
 @{ 
     Layout = null;
 }
-<form asp-action="EditTopicTitle" method="post" asp-controller="Data">
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Изменить название беседы</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<form asp-action="EditTopicTitle" id="login-form" method="post" asp-controller="Data">
     <div asp-validation-summary="All"></div>
-    <div class="form-group">
-        <label asp-for="Title" class="control-label">Тема</label>
-        <input type="text" asp-for="Title" class="form-control" />
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Изменить" class="btn btn-default" />
+    <div class="container text-center">
+        <div>
+            <input type="text" asp-for="Title" placeholder="Название беседы" />
+        </div>
+        <div>
+            <input id="action-submit" type="submit" value="Изменить" />
+        </div>
     </div>
 </form>
