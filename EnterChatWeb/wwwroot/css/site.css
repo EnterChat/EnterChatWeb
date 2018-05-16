@@ -289,3 +289,8 @@ img.avatar {
 #active-link:hover{
     color: #3D0165;
 }
+
+.send-field {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+}

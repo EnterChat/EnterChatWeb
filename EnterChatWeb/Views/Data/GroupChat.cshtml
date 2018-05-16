@@ -4,25 +4,50 @@
     <title>Чат компании</title>
 </head>
 
-<h1 id="page-header">Групповой чат</h1>
+<nav class="navbar page-header">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <h3>Групповой чат</h3>
+        </div>
+    </div>
+</nav>
 
+<div class="first-head">
+    <div class="container-fluid info-card">
+        <div class="container-fluid info-shit" style="padding-top: 10px;">
+            <div style="height:475px;overflow-y:scroll;" id="msgs">
+                @foreach (GroupChatMessage message in Model.GroupMessages)
+                {
+                    <p style="font-weight:bold;color: #5E35B1">@message.UserPlusWorker.FirstName 
+                @message.UserPlusWorker.SecondName  <span style="font-weight:normal;color: #000000;font-size:10px">
+                        @message.CreationDate</span></p>
+                    <p>@message.Text</p>
+                }
+            </div>
+        </div>
+    </div>
 
-<div id="msgs">
-    @foreach (GroupChatMessage message in Model.GroupMessages)
-    {
-        <p>@message.UserPlusWorker.FirstName
-    @message.UserPlusWorker.SecondName: @message.Text @message.CreationDate</p>
-    }
+<div class="send-field">
+        <div>
+            <input style="width:100%" type="text" id="MessageField"
+                   placeholder="Введите сообщение здесь" />
+        </div>
+        <div>
+            <p style="margin-top:13px; margin-left:10px">
+            <a class="btn btn-primary" id="sendBtn" asp-action="">Отправить</a></p>
+        </div>
+</div>
 </div>
 
-<div style="position:absolute;height:20px;bottom:10px;left:0; display:inline;width:100%">
-    <input type="text" style="max-width:unset;width:100%;max-width:80%" id="MessageField"
-           placeholder="type message and press enter"/>
-    <p style="display:inline-block"><a class="btn btn-primary" id="sendBtn" asp-action="">Отправить</a></p>
-</div>
 
 @section Scripts{
     <script>
+
+        window.onload = function () {
+            var objDiv = document.getElementById("msgs");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        }
+
         $(function () {
             var userName = "testUser";
 
@@ -50,7 +75,15 @@
                 if (hours < 10) hours = '0' + hours;
                 var stringDate = now.getUTCDate() + '.' + month + '.' + now.getFullYear() +
                     ' ' + hours + ':' + mins + ':' + secs;
-                $('#msgs').append('<p>' + e.data + ' ' + stringDate + '</p>');
+
+                var dd = e.data.indexOf(":");
+                var author = e.data.substring(0, dd);
+                var message = e.data.substring(dd + 1);
+
+                $('#msgs').append('<p style="font-weight:bold;color: #5E35B1">' + author + ' ' + 
+                    '<span style="font-weight:normal;color: #000000;font-size:10px">' + stringDate  + '</span>' + 
+                    '</p>' + '<p>' +
+                    message + '</p>');
             };
 
             socket.onerror = function (e) {
@@ -75,10 +108,12 @@
                     var topicId = 'NoN'
                     var message = topicId + '|' + $('#MessageField').val();
                     socket.send(message);
+                    var objDiv = document.getElementById("msgs");
+                    objDiv.scrollTop = objDiv.scrollHeight;
                     $('#MessageField').val('');
-              
+
                 }
-                
+
             });
         });
     </script>
