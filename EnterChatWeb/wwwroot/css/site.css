@@ -74,7 +74,7 @@
     text-decoration: none;
     font-size: 19px;
     font-family: 'Roboto', sans-serif;
-    color: #818181;
+    color: #000000;
     display: block;
 }
 
@@ -84,8 +84,9 @@
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-    color: #ffffff;
-    background-color: #5E35B1;
+    /*color: #ffffff;*/
+    background-color: #d5d5d5;
+    border-left: 10px solid #5E35B1;
 }
 
 .main-body-content {
